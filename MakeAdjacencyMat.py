@@ -54,6 +54,9 @@ def getGovID(personID):
 def getName(personID):
     return bioMap[personID][1]
 
+def getState(personID):
+    return bioMap[personID][2]
+
 def getParty(personID):
     return bioMap[personID][3]
 
