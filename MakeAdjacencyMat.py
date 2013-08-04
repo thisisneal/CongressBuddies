@@ -1,10 +1,16 @@
 import os
 import json
+import json
 
 pathToVoteDirs = "votes/2013/"
 prefix = "h"
 
 adjacenyMap = {}
+bioMap = {}
+
+# Populate bioMap
+def getBios():
+    pass
 
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
@@ -43,15 +49,27 @@ def parseFile(jsonFile):
         #print Exception, err
         return False
 
+# Get the top N buddies for a given person
+def getBuddies(personID, num):
+    friends = adjacenyMap[personID]
+    print sorted(friends.items(), reverse=True)
+
 def main():
-    for dirname, dirnames, filenames in os.walk(pathToVoteDirs):
-        for subdirname in dirnames:
-            if subdirname.startswith(prefix):
-                success = parseFile(pathToVoteDirs + subdirname + "/data.json")
-                if success :
-                    print ". Parsed file for " + subdirname
-                else:
-                    print "X Failed to parse file " + subdirname
-    print adjacenyMap
+    # Pull adjacency mapping from disk if possible
+    if os.path.isfile("ADJ_MAP.json"):
+        json_data = open('ADJ_MAP.json').read()
+        adjacenyMap = json.loads(json_data)
+    # Otherwise serialize the mapping after computing it
+    else:
+        for dirname, dirnames, filenames in os.walk(pathToVoteDirs):
+            for subdirname in dirnames:
+                if subdirname.startswith(prefix):
+                    success = parseFile(pathToVoteDirs + subdirname + "/data.json")
+                    if success :
+                        print ". Parsed file for " + subdirname
+                    else:
+                        print "X Failed to parse file " + subdirname
+        fp = open('ADJ_MAP.json', 'wb')
+        json.dump(adjacenyMap, fp)
 
 main()
