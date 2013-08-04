@@ -14,20 +14,30 @@ class MyFormHandler(tornado.web.RequestHandler):
                    </form></body></html>""")
 
     def renderResults(self, personID, numBuddies):
+        count = 1
         self.set_header("Content-Type", "text/html")
-        self.write("Top " + str(numBuddies) + " most similar voters for ")
+        self.write("<center>")
+        #elf.write("Top " + str(numBuddies) + " most similar voters for ")
         name = util.getName(personID)
-        self.write(name)
-        self.write(" (ID: " + personID + ")")
+        #elf.write(name)
+        #self.write(" (ID: " + personID + ")")
         self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(util.getGovID(personID)) + ".jpeg\">")
         self.write(""" <br> """)
+        self.write(personID + " : " + name)
+        self.write("</center>")
         bros = util.getBuddies(personID, numBuddies)
+        self.write("<table border=\"1\">")
         for friend in bros:
+            self.write("<tr>")
+            self.write("<td> <b>" + str(count) + ".</b> </td>")
+            govID = util.getGovID(friend)
+            self.write("""<td> <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(govID) + ".jpeg\">")
             hyperlink = "/?personID=" + friend + "&numBuddies=" + str(numBuddies)
             self.write("\n<a href='" + hyperlink + "'>" + friend + " : " + util.getName(friend) + "</a>")
-            govID = util.getGovID(friend)
-            self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(govID) + ".jpeg\">")
-            self.write(""" <br> """)
+            self.write(""" <br> </td> """)
+            count += 1
+            self.write("</tr>")
+        self.write("</table>")
 
     def get(self):
         util.init()
