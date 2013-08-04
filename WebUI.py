@@ -4,9 +4,8 @@ import tornado.web
 import MakeAdjacencyMat as util
 
 class MyFormHandler(tornado.web.RequestHandler):
-    def get(self):
-        util.init()
-        self.write("""<html><body><form action="/" method="post">
+    def writeForm(self):
+        self.write("""<html><body><form action="/" method="get">
                    ID: <input type="text" name="personID">
                    <br/>
                    Num: <input type="text" name="numBuddies">
@@ -14,12 +13,9 @@ class MyFormHandler(tornado.web.RequestHandler):
                    <br/>
                    </form></body></html>""")
 
-    def post(self):
+    def renderResults(self, personID, numBuddies):
         self.set_header("Content-Type", "text/html")
-        numBuddiesStr = self.get_argument("numBuddies")
-        numBuddies = int(numBuddiesStr)
-        personID = self.get_argument("personID")
-        self.write("Top " + numBuddiesStr + " most similar voters for ")
+        self.write("Top " + str(numBuddies) + " most similar voters for ")
         name = util.getName(personID)
         self.write(name)
         self.write(" (ID: " + personID + ")")
@@ -31,6 +27,20 @@ class MyFormHandler(tornado.web.RequestHandler):
             govID = util.getGovID(friend)
             self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(govID) + ".jpeg\">")
             self.write(""" <br> """)
+
+    def get(self):
+        util.init()
+        numBuddiesStr = self.get_argument("numBuddies", None)
+        if numBuddiesStr is not None:
+            numBuddies = int(numBuddiesStr)
+        else:
+            self.writeForm()
+            return
+        personID = self.get_argument("personID", None)
+        if personID is not None:
+            self.renderResults(personID, numBuddies)
+        else:
+            self.writeForm()
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),

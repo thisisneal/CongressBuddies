@@ -20,7 +20,10 @@ def getBios():
         pdata = yaml.load(open('legislators-current.yaml'))
         for person in pdata:
             try:
-                bioMap[person['id']['bioguide']] = (person['id']['govtrack'],person['name']['official_full'])
+                persondict[person['id']['bioguide']]=(person['id']['govtrack'],
+                                                      person['name']['official_full'],
+                                                      person['terms'][-1]['state'],
+                                                      person['terms'][-1]['party'])
             except:
                 pass
         fp = open('BIO_MAP.json', 'wb')
