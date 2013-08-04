@@ -1,6 +1,6 @@
 import os
 import json
-import json
+import yaml
 
 pathToVoteDirs = "votes/2013/"
 prefix = "h"
@@ -10,7 +10,12 @@ bioMap = {}
 
 # Populate bioMap
 def getBios():
-    pass
+    pdata = yaml.load(open('legislators-current.yaml'))
+    for person in pdata:
+        try:
+            bioMap[person['id']['bioguide']] = (person['id']['govtrack'],person['name']['official_full'])
+        except:
+            pass
 
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
@@ -57,6 +62,7 @@ def getBuddies(personID, num):
 
 def main():
     global adjacenyMap
+    getBios()
     # Pull adjacency mapping from disk if possible
     if os.path.isfile("ADJ_MAP.json"):
         json_data = open('ADJ_MAP.json').read()
@@ -73,8 +79,9 @@ def main():
                         print "X Failed to parse file " + subdirname
         fp = open('ADJ_MAP.json', 'wb')
         json.dump(adjacenyMap, fp)
-    #print json.dumps(adjacenyMap)
-    #print adjacenyMap.keys()
-    print getBuddies("K000378", 10)
+    buddies = getBuddies("G000571", 10)
+    print bioMap["G000571"]
+    for bro in buddies:
+        print bioMap[bro[0]],
 
 main()
