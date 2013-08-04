@@ -40,6 +40,7 @@ class MyFormHandler(tornado.web.RequestHandler):
             self.write("\n<a href='" + hyperlink + "'> " + util.getName(friendID) + "</a>")
             self.write(""" <br> </td> """)
             count += 1
+            self.write("<td>" + util.getParty(friendID) + "</td>")
             self.write("</tr>")
         self.write("</table>")
         self.write("""Name search: <form action="/" method="get">
