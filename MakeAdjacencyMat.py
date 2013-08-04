@@ -10,14 +10,15 @@ def incrementSimilarity(perA, perB):
 
 # Given an array of individual votes that matched vote type and bill,
 # increment the similarity counts in adjaceny matrix between all people involved
-def countSamevotes(votes):
+def countSameVotes(votes):
     for vote in votes:
         cur_person = vote['id']
         for vote in votes:
             other_person = vote['id']
-        incrementSimilarity(cur_person, other_person)
+            incrementSimilarity(cur_person, other_person)
 
-def fooFile(jsonFile):
+# Count the similarities within a given vote data json file
+def parseFile(jsonFile):
     json_data = open(jsonFile).read()
     data = json.loads(json_data)
     try:
@@ -27,10 +28,19 @@ def fooFile(jsonFile):
         nays = votes['Nay']
         countSameVotes(ayes)
         countSameVotes(nays)
-    except:
-        pass
+        return True
+    except Exception, err:
+        #print Exception, err
+        return False
 
-for dirname, dirnames, filenames in os.walk(pathToVoteDirs):
-    for subdirname in dirnames:
-        if subdirname.startswith(prefix):
-            fooFile(pathToVoteDirs + subdirname + "/data.json")
+def main():
+    for dirname, dirnames, filenames in os.walk(pathToVoteDirs):
+        for subdirname in dirnames:
+            if subdirname.startswith(prefix):
+                success = parseFile(pathToVoteDirs + subdirname + "/data.json")
+                if success :
+                    print ". Parsed file for " + subdirname
+                else:
+                    print "X Failed to parse file " + subdirname
+
+main()
