@@ -9,28 +9,6 @@ adjacenyMap = {} # Person onto {Person onto closeness count}
 bioMap = {}  # ID onto bio data
 nameMap = {} # Name onto ID
 
-# Populate bioMap
-def getBios():
-    global bioMap, nameMap
-    # Pull congress bios from disk if possible
-    if os.path.isfile("BIO_MAP.json"):
-        json_data = open('BIO_MAP.json').read()
-        bioMap = json.loads(json_data)
-    # Otherwise serialize the mapping after computing it
-    else:
-        pdata = yaml.load(open('legislators-current.yaml'))
-        for person in pdata:
-            try:
-                persondict[person['id']['bioguide']]=(person['id']['govtrack'],
-                                                      person['name']['official_full'],
-                                                      person['terms'][-1]['state'],
-                                                      person['terms'][-1]['party'])
-            except:
-                pass
-        fp = open('BIO_MAP.json', 'wb')
-        json.dump(bioMap, fp)
-    nameMap = {(v[1].lower()):k for k, v in bioMap.items()}
-
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
     incrementSimilarity(perA, perB)
@@ -68,12 +46,16 @@ def parseFile(jsonFile):
         #print Exception, err
         return False
 
-def getName(personID):
-    return bioMap[personID][1]
-
 # Return GovTrack ID (used for profile pictures)
 def getGovID(personID):
     return bioMap[personID][0]
+
+# Return full name
+def getName(personID):
+    return bioMap[personID][1]
+
+def getParty(personID):
+    return bioMap[personID][3]
 
 # Return votes ID from a full matched name
 def getIDfromName(name):
@@ -91,13 +73,41 @@ def getBuddies(personID, num):
     except:
         return []
 
+# Populate bioMap
+def getBios():
+    global bioMap, nameMap
+    BIO_FILE = prefix + "_BIO_MAP.json" # different serialization for house/senate
+    # Pull congress bios from disk if possible
+    if os.path.isfile(BIO_FILE):
+        json_data = open(BIO_FILE).read()
+        bioMap = json.loads(json_data)
+    # Otherwise serialize the mapping after computing it
+    else:
+        pdata = yaml.load(open('legislators-current.yaml'))
+        for person in pdata:
+            try:
+                if prefix == 'h':
+                    keyID = person['id']['bioguide'] # ID used in house votes
+                elif prefix == 's':
+                    keyID = person['id']['lis'] # ID used in senate votes
+                bioMap[keyID] =(person['id']['govtrack'],
+                                person['name']['official_full'],
+                                person['terms'][-1]['state'],
+                                person['terms'][-1]['party'])
+            except:
+                pass
+        fp = open(BIO_FILE, 'wb')
+        json.dump(bioMap, fp)
+    nameMap = {(v[1].lower()):k for k, v in bioMap.items()}
+
 # Prepare lookup maps
 def init():
     global adjacenyMap
     getBios()
+    MAP_FILE = prefix + "_ADJ_MAP.json"
     # Pull adjacency mapping from disk if possible
-    if os.path.isfile("ADJ_MAP.json"):
-        json_data = open('ADJ_MAP.json').read()
+    if os.path.isfile(MAP_FILE):
+        json_data = open(MAP_FILE).read()
         adjacenyMap = json.loads(json_data)
     # Otherwise serialize the mapping after computing it
     else:
@@ -109,8 +119,9 @@ def init():
                         print ". Parsed file for " + subdirname
                     else:
                         print "X Failed to parse file " + subdirname
-        fp = open('ADJ_MAP.json', 'wb')
+        fp = open(MAP_FILE, 'wb')
         json.dump(adjacenyMap, fp)
+    print "Done initializing backend."
     # Ad hoc:
     #buddies = getBuddies("P000523", 5)
     #for bro in buddies:

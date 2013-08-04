@@ -5,6 +5,10 @@ import MakeAdjacencyMat as util
 
 class MyFormHandler(tornado.web.RequestHandler):
     def writeForm(self):
+        self.write("""Name search: <form action="/" method="get">
+                   ID: <input type="text" name="name">
+                   <input type="submit" value="Submit">
+                   </form> <br/>""")
         self.write("""<html><body><form action="/" method="get">
                    ID: <input type="text" name="personID">
                    <br/>
@@ -27,24 +31,23 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write("</center>")
         bros = util.getBuddies(personID, numBuddies)
         self.write("<table border=\"1\">")
-        for friend in bros:
+        for friendID in bros:
             self.write("<tr>")
             self.write("<td> <b>" + str(count) + ".</b> </td>")
-            govID = util.getGovID(friend)
+            govID = util.getGovID(friendID)
             self.write("""<td> <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(govID) + ".jpeg\">")
-            hyperlink = "/?personID=" + friend + "&numBuddies=" + str(numBuddies)
-            self.write("\n<a href='" + hyperlink + "'>" + friend + " : " + util.getName(friend) + "</a>")
+            hyperlink = "/?personID=" + friendID + "&numBuddies=" + str(numBuddies)
+            self.write("\n<a href='" + hyperlink + "'> " + util.getName(friendID) + "</a>")
             self.write(""" <br> </td> """)
             count += 1
             self.write("</tr>")
         self.write("</table>")
         self.write("""Name search: <form action="/" method="get">
-                   ID: <input type="text" name="name">
+                   <input type="text" name="name">
                    <input type="submit" value="Submit">
                    </form>""")
 
     def get(self):
-        util.init()
         name = self.get_argument("name", None)
         if name is not None:
             personID = util.getIDfromName(name)
@@ -68,6 +71,7 @@ application = tornado.web.Application([
 ])
 
 if __name__ == "__main__":
+    util.init()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
 
