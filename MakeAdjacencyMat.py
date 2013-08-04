@@ -52,9 +52,11 @@ def parseFile(jsonFile):
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
     friends = adjacenyMap[personID]
-    print sorted(friends.items(), reverse=True)
+    sortedList = sorted(friends.items(), key=lambda x: x[1], reverse=True)
+    return sortedList[:num]
 
 def main():
+    global adjacenyMap
     # Pull adjacency mapping from disk if possible
     if os.path.isfile("ADJ_MAP.json"):
         json_data = open('ADJ_MAP.json').read()
@@ -71,5 +73,8 @@ def main():
                         print "X Failed to parse file " + subdirname
         fp = open('ADJ_MAP.json', 'wb')
         json.dump(adjacenyMap, fp)
+    #print json.dumps(adjacenyMap)
+    #print adjacenyMap.keys()
+    print getBuddies("K000378", 10)
 
 main()
