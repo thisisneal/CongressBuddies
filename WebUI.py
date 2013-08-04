@@ -15,7 +15,7 @@ class MyFormHandler(tornado.web.RequestHandler):
                    </form></body></html>""")
 
     def post(self):
-        self.set_header("Content-Type", "text/plain")
+        self.set_header("Content-Type", "text/html")
         numBuddiesStr = self.get_argument("numBuddies")
         numBuddies = int(numBuddiesStr)
         personID = self.get_argument("personID")
@@ -23,10 +23,14 @@ class MyFormHandler(tornado.web.RequestHandler):
         name = util.getName(personID)
         self.write(name)
         self.write(" (ID: " + personID + ")")
+        self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(util.getGovID(personID)) + ".jpeg\">")
+        self.write(""" <br> """)
         bros = util.getBuddies(personID, numBuddies)
         for friend in bros:
             self.write("\n" + friend + " : " + util.getName(friend))
             govID = util.getGovID(friend)
+            self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(govID) + ".jpeg\">")
+            self.write(""" <br> """)
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),
