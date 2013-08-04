@@ -5,12 +5,13 @@ import yaml
 pathToVoteDirs = "votes/2013/"
 prefix = "h"
 
-adjacenyMap = {}
-bioMap = {}
+adjacenyMap = {} # Person onto {Person onto closeness count}
+bioMap = {}  # ID onto bio data
+nameMap = {} # Name onto ID
 
 # Populate bioMap
 def getBios():
-    global bioMap
+    global bioMap, nameMap
     # Pull congress bios from disk if possible
     if os.path.isfile("BIO_MAP.json"):
         json_data = open('BIO_MAP.json').read()
@@ -28,6 +29,7 @@ def getBios():
                 pass
         fp = open('BIO_MAP.json', 'wb')
         json.dump(bioMap, fp)
+    nameMap = {v[1]:k for k, v in bioMap.items()}
 
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
