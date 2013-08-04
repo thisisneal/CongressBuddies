@@ -66,6 +66,10 @@ def parseFile(jsonFile):
 def getName(personID):
     return bioMap[personID][1]
 
+# Return GovTrack ID (used for profile pictures)
+def getGovID(personID):
+    return bioMap[personID][0]
+
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
     try:

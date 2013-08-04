@@ -26,6 +26,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         bros = util.getBuddies(personID, numBuddies)
         for friend in bros:
             self.write("\n" + friend + " : " + util.getName(friend))
+            govID = util.getGovID(friend)
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),
