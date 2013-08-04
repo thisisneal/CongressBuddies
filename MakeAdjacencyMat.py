@@ -10,12 +10,21 @@ bioMap = {}
 
 # Populate bioMap
 def getBios():
-    pdata = yaml.load(open('legislators-current.yaml'))
-    for person in pdata:
-        try:
-            bioMap[person['id']['bioguide']] = (person['id']['govtrack'],person['name']['official_full'])
-        except:
-            pass
+    global bioMap
+    # Pull congress bios from disk if possible
+    if os.path.isfile("BIO_MAP.json"):
+        json_data = open('BIO_MAP.json').read()
+        bioMap = json.loads(json_data)
+    # Otherwise serialize the mapping after computing it
+    else:
+        pdata = yaml.load(open('legislators-current.yaml'))
+        for person in pdata:
+            try:
+                bioMap[person['id']['bioguide']] = (person['id']['govtrack'],person['name']['official_full'])
+            except:
+                pass
+        fp = open('BIO_MAP.json', 'wb')
+        json.dump(bioMap, fp)
 
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
@@ -58,9 +67,10 @@ def parseFile(jsonFile):
 def getBuddies(personID, num):
     friends = adjacenyMap[personID]
     sortedList = sorted(friends.items(), key=lambda x: x[1], reverse=True)
-    return sortedList[:num]
+    return sortedList[1:num+1]
 
-def main():
+# Prepare lookup maps
+def init():
     global adjacenyMap
     getBios()
     # Pull adjacency mapping from disk if possible
@@ -79,9 +89,9 @@ def main():
                         print "X Failed to parse file " + subdirname
         fp = open('ADJ_MAP.json', 'wb')
         json.dump(adjacenyMap, fp)
-    buddies = getBuddies("G000571", 10)
-    print bioMap["G000571"]
-    for bro in buddies:
-        print bioMap[bro[0]],
+    # Ad hoc:
+    #buddies = getBuddies("P000523", 5)
+    #for bro in buddies:
+    #    print bro[0] + " : " + bioMap[bro[0]][1]
 
 main()

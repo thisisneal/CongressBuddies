@@ -9,4 +9,6 @@ rsync -avz --delete --delete-excluded --exclude *.xml govtrack.us::govtrackdata/
 PyYAML : http://pyyaml.org/
 - sudo python setup.py install
 
+Tornado : pip install tornado
+
 Who likes who in congress!
