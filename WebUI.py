@@ -23,7 +23,8 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(""" <br> """)
         bros = util.getBuddies(personID, numBuddies)
         for friend in bros:
-            self.write("\n" + friend + " : " + util.getName(friend))
+            hyperlink = "/?personID=" + friend + "&numBuddies=" + str(numBuddies)
+            self.write("\n<a href='" + hyperlink + "'>" + friend + " : " + util.getName(friend) + "</a>")
             govID = util.getGovID(friend)
             self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" +  str(govID) + ".jpeg\">")
             self.write(""" <br> """)
