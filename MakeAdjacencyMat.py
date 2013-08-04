@@ -4,9 +4,19 @@ import json
 pathToVoteDirs = "votes/2013/"
 prefix = "h"
 
+adjacenyMap = {}
+
 # Increment the similarity count between two people
+def incrementSimilarityBi(perA, perB):
+    incrementSimilarity(perA, perB)
+    incrementSimilarity(perB, perA)
+
 def incrementSimilarity(perA, perB):
-    pass
+    if perA not in adjacenyMap:
+        adjacenyMap[perA] = {}
+    if perB not in adjacenyMap[perA]:
+        adjacenyMap[perA][perB] = 0
+    adjacenyMap[perA][perB] += 1
 
 # Given an array of individual votes that matched vote type and bill,
 # increment the similarity counts in adjaceny matrix between all people involved
@@ -15,7 +25,7 @@ def countSameVotes(votes):
         cur_person = vote['id']
         for vote in votes:
             other_person = vote['id']
-            incrementSimilarity(cur_person, other_person)
+            incrementSimilarityBi(cur_person, other_person)
 
 # Count the similarities within a given vote data json file
 def parseFile(jsonFile):
@@ -23,10 +33,10 @@ def parseFile(jsonFile):
     data = json.loads(json_data)
     try:
         votes = data['votes']
-        pres = votes['Present']
+        #pres = votes['Present']
         ayes = votes['Yea']
-        nays = votes['Nay']
         countSameVotes(ayes)
+        nays = votes['Nay']
         countSameVotes(nays)
         return True
     except Exception, err:
@@ -42,5 +52,6 @@ def main():
                     print ". Parsed file for " + subdirname
                 else:
                     print "X Failed to parse file " + subdirname
+    print adjacenyMap
 
 main()
