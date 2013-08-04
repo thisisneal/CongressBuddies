@@ -70,8 +70,11 @@ def getName(personID):
 def getBuddies(personID, num):
     try:
         friends = adjacenyMap[personID]
-        sortedList = sorted(friends.items(), key=lambda x: x[1], reverse=True)
-        return sortedList[1:num+1]
+        sortedListTuples = sorted(friends.items(), key=lambda x: x[1], reverse=True)
+        sortedNameList = []
+        for curTuple in sortedListTuples:
+            sortedNameList.append(curTuple[0])
+        return sortedNameList[1:num+1]
     except:
         return []
 

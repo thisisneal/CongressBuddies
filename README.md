@@ -11,4 +11,8 @@ PyYAML : http://pyyaml.org/
 
 Tornado : pip install tornado
 
+To run:
+    python WebUI.py
+    http://localhost:8888
+
 Who likes who in congress!

@@ -24,7 +24,8 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(name)
         self.write(" (ID: " + personID + ")")
         bros = util.getBuddies(personID, numBuddies)
-        self.write(str(bros))
+        for friend in bros:
+            self.write("\n" + friend + " : " + util.getName(friend))
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),
@@ -33,3 +34,5 @@ application = tornado.web.Application([
 if __name__ == "__main__":
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
+
+# H001032
