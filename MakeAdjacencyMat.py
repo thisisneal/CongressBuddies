@@ -75,6 +75,10 @@ def getName(personID):
 def getGovID(personID):
     return bioMap[personID][0]
 
+# Return votes ID from a full matched name
+def getIDfromName(name):
+    return nameMap[name]
+
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
     try:

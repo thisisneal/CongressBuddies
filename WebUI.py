@@ -38,9 +38,18 @@ class MyFormHandler(tornado.web.RequestHandler):
             count += 1
             self.write("</tr>")
         self.write("</table>")
+        self.write("""Name search: <form action="/" method="get">
+                   ID: <input type="text" name="name">
+                   <input type="submit" value="Submit">
+                   </form>""")
 
     def get(self):
         util.init()
+        name = self.get_argument("name", None)
+        if name is not None:
+            personID = util.getIDfromName(name)
+            self.renderResults(personID, 5)
+            return
         numBuddiesStr = self.get_argument("numBuddies", None)
         if numBuddiesStr is not None:
             numBuddies = int(numBuddiesStr)
@@ -52,6 +61,7 @@ class MyFormHandler(tornado.web.RequestHandler):
             self.renderResults(personID, numBuddies)
         else:
             self.writeForm()
+
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),
