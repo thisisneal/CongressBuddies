@@ -63,11 +63,17 @@ def parseFile(jsonFile):
         #print Exception, err
         return False
 
+def getName(personID):
+    return bioMap[personID][1]
+
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
-    friends = adjacenyMap[personID]
-    sortedList = sorted(friends.items(), key=lambda x: x[1], reverse=True)
-    return sortedList[1:num+1]
+    try:
+        friends = adjacenyMap[personID]
+        sortedList = sorted(friends.items(), key=lambda x: x[1], reverse=True)
+        return sortedList[1:num+1]
+    except:
+        return []
 
 # Prepare lookup maps
 def init():
@@ -93,5 +99,3 @@ def init():
     #buddies = getBuddies("P000523", 5)
     #for bro in buddies:
     #    print bro[0] + " : " + bioMap[bro[0]][1]
-
-main()

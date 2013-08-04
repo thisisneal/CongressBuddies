@@ -1,8 +1,11 @@
 import tornado.ioloop
 import tornado.web
 
+import MakeAdjacencyMat as util
+
 class MyFormHandler(tornado.web.RequestHandler):
     def get(self):
+        util.init()
         self.write("""<html><body><form action="/" method="post">
                    ID: <input type="text" name="personID">
                    <br/>
@@ -13,8 +16,15 @@ class MyFormHandler(tornado.web.RequestHandler):
 
     def post(self):
         self.set_header("Content-Type", "text/plain")
-        self.write("Top " + self.get_argument("numBuddies") + " most similar voters for ")
-        self.write("ID: " + self.get_argument("personID"))
+        numBuddiesStr = self.get_argument("numBuddies")
+        numBuddies = int(numBuddiesStr)
+        personID = self.get_argument("personID")
+        self.write("Top " + numBuddiesStr + " most similar voters for ")
+        name = util.getName(personID)
+        self.write(name)
+        self.write(" (ID: " + personID + ")")
+        bros = util.getBuddies(personID, numBuddies)
+        self.write(str(bros))
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),
