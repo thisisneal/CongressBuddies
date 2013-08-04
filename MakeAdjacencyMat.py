@@ -103,6 +103,7 @@ def getBios():
 # Prepare lookup maps
 def init():
     global adjacenyMap
+    print "initializing backend..."
     getBios()
     MAP_FILE = prefix + "_ADJ_MAP.json"
     # Pull adjacency mapping from disk if possible
