@@ -29,7 +29,7 @@ def getBios():
                 pass
         fp = open('BIO_MAP.json', 'wb')
         json.dump(bioMap, fp)
-    nameMap = {v[1]:k for k, v in bioMap.items()}
+    nameMap = {(v[1].lower()):k for k, v in bioMap.items()}
 
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
@@ -77,7 +77,7 @@ def getGovID(personID):
 
 # Return votes ID from a full matched name
 def getIDfromName(name):
-    return nameMap[name]
+    return nameMap[name.lower()]
 
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
