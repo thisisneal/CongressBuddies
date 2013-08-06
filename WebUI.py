@@ -53,7 +53,8 @@ class MyFormHandler(tornado.web.RequestHandler):
     def get(self):
         name = self.get_argument("name", None)
         if name is not None:
-            personID = util.getIDfromName(name)
+            #Add feature to see if distance was used
+            personID = util.getIDfromName(name)[0]
             self.renderResults(personID, 5)
             return
         numBuddiesStr = self.get_argument("numBuddies", None)
