@@ -28,7 +28,8 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" + str(util.getGovID(personID)) + ".jpeg\">")
         self.write(""" <br> """)
         party = util.getParty(personID)
-        self.write(name + " : " + party)
+        state = util.getState(personID)
+        self.write(name + " : " + party + " : " + state)
         self.write("</center>")
         bros = util.getBuddies(personID, numBuddies)
         self.write("<table border=\"1\">")
@@ -69,9 +70,15 @@ class MyFormHandler(tornado.web.RequestHandler):
         else:
             self.writeForm()
 
+# Return a json list of names of all congress people
+class MyListHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header("Content-Type", "text/json")
+        self.write(util.getPersonListStr())
 
 application = tornado.web.Application([
     (r"/", MyFormHandler),
+    (r"/personList", MyListHandler),
 ])
 
 if __name__ == "__main__":

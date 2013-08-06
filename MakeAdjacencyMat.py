@@ -62,6 +62,10 @@ def getState(personID):
 def getParty(personID):
     return bioMap[personID][3]
 
+# Get a list of names of all congress people as a string
+def getPersonListStr():
+    return json.dumps(nameMap.keys())
+
 # Return votes ID from a full matched name
 def getIDfromName(name):
     if nameMap.has_key(name.lower()): return (nameMap[name.lower()], False)
@@ -74,11 +78,10 @@ def getIDfromName(name):
             found = n
     #print found
     return (nameMap[found], True)
-        
+
 
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
-    print "GET BUDDIES"
     try:
         friends = adjacenyMap[personID]
         sortedListTuples = sorted(friends.items(), key=lambda x: x[1], reverse=True)
