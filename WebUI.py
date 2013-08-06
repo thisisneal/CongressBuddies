@@ -23,17 +23,17 @@ class MyFormHandler(tornado.web.RequestHandler):
     def renderResults(self, personID, numBuddies):
         count = 1
         self.set_header("Content-Type", "text/html")
-        self.write("<center>")
-        #elf.write("Top " + str(numBuddies) + " most similar voters for ")
-        name = util.getName(personID)
-        #elf.write(name)
-        #self.write(" (ID: " + personID + ")")
-        self.write(""" <img width=100 src="http://www.govtrack.us/data/photos/""" + str(util.getGovID(personID)) + ".jpeg\">")
-        self.write(""" <br> """)
-        party = util.getParty(personID)
-        state = util.getState(personID)
-        self.write(name + " : " + party + " : " + state)
-        self.write("</center>")
+        content1 = """
+        <center>
+           <img width=100 src="http://www.govtrack.us/data/photos/{curGovID}.jpeg\">
+           <br>
+           {curName} : {curParty} : {curState}
+        </center>
+        """.format(curGovID = util.getGovID(personID),
+                   curName  = util.getName(personID),
+                   curParty = util.getParty(personID),
+                   curState = util.getState(personID))
+        self.write(content1)
         bros = util.getBuddies(personID, numBuddies)
         self.write("<table border=\"1\">")
         for friendID in bros:
