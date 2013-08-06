@@ -88,7 +88,7 @@ class MyListHandler(tornado.web.RequestHandler):
 application = tornado.web.Application([
     (r"/", MyFormHandler),
     (r"/personList", MyListHandler),
-])
+], static_path = "static/")
 
 if __name__ == "__main__":
     util.init()
