@@ -2,15 +2,21 @@ def min(intA, intB):
     if(intA < intB): return intA
     return intB
 
-def dist(strA, strB):
-    lenA = len(strA)
-    lenB = len(strA)
+#Compute the Levenshtein distance between strings s and t
+def dist(s, t):
+    m = len(s)
+    n = len(t)
+    d = [[0 for i in xrange(n+1)] for j in range(m+1)]
 
-    if(len(strA) == 0): return lenB
-    if(len(strB) == 0): return lenA
+    for i in xrange(1, m+1):
+        d[i][0] = i
 
-    cost = 0
-    if (strA[lenA-1] != strB[lenB-1]): cost = 1;
+    for j in xrange(1, n+1):
+        d[0][j] = j
 
-    return min(min(dist(strA[0:lenA-1], strB)+1, dist(strA, strB[0:lenB-1])+1),
-            dist(strA[0:lenA-1], strB[0:lenB-1])+cost)
+    for j in xrange(1, n+1):
+        for i in xrange(1, m+1):
+            if s[i-1] == t[j-1]: d[i][j] = d[i-1][j-1]
+            else: d[i][j] = min(min(d[i-1][j]+1, d[i][j-1]+1), d[i-1][j-1]+1)
+
+    return d[m][n]

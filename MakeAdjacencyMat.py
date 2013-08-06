@@ -1,28 +1,15 @@
 import os
 import json
 import yaml
+import sys
+
+import fuzzySearch as fuzzy
 
 pathToVoteDirs = "votes/2013/"
 
 adjacenyMap = {} # Person onto {Person onto closeness count}
 bioMap = {}  # ID onto bio data
 nameMap = {} # Name onto ID
-
-def min(intA, intB):
-    if(intA < intB): return intA
-    return intB
-
-def dist(strA, strB):
-    lenA = len(strA)
-    lenB = len(strA)
-
-    if(len(strA) == 0): return lenB
-    if(len(strB) == 0): return lenA
-
-    cost = 0
-    if (s[len_s-1] != t[len_t-1]): cost = 1;
-
-    return min(min(dist(strA[0:lenA-1], strB)+1, dist(strA, strB[0:lenB-1])+1), dist(strA[0:lenA-1], strB[0:lenB-1])+cost)
 
 # Increment the similarity count between two people
 def incrementSimilarityBi(perA, perB):
@@ -77,7 +64,17 @@ def getParty(personID):
 
 # Return votes ID from a full matched name
 def getIDfromName(name):
-    return nameMap[name.lower()]
+    if nameMap.has_key(name.lower()): return (nameMap[name.lower()], False)
+    sml = sys.maxint
+    found = name
+    for n in nameMap.iterkeys():
+        d = fuzzy.dist(name, n)
+        if d < sml:
+            sml = d
+            found = n
+    #print found
+    return (nameMap[found], True)
+        
 
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
