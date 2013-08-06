@@ -6,7 +6,7 @@ import MakeAdjacencyMat as util
 class MyFormHandler(tornado.web.RequestHandler):
     def writeForm(self):
         self.write("""Name search: <form action="/" method="get">
-                   ID: <input type="text" name="name">
+                   <input type="text" name="name">
                    <input type="submit" value="Submit">
                    </form> <br/>""")
         self.write("""<html><body><form action="/" method="get">

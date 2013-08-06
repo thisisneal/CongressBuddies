@@ -3,7 +3,6 @@ import json
 import yaml
 
 pathToVoteDirs = "votes/2013/"
-prefix = "h"
 
 adjacenyMap = {} # Person onto {Person onto closeness count}
 bioMap = {}  # ID onto bio data
@@ -82,6 +81,7 @@ def getIDfromName(name):
 
 # Get the top N buddies for a given person
 def getBuddies(personID, num):
+    print "GET BUDDIES"
     try:
         friends = adjacenyMap[personID]
         sortedListTuples = sorted(friends.items(), key=lambda x: x[1], reverse=True)
@@ -95,7 +95,7 @@ def getBuddies(personID, num):
 # Populate bioMap
 def getBios():
     global bioMap, nameMap
-    BIO_FILE = prefix + "_BIO_MAP.json" # different serialization for house/senate
+    BIO_FILE = "BIO_MAP.json" # different serialization for house/senate
     # Pull congress bios from disk if possible
     if os.path.isfile(BIO_FILE):
         json_data = open(BIO_FILE).read()
@@ -105,9 +105,10 @@ def getBios():
         pdata = yaml.load(open('legislators-current.yaml'))
         for person in pdata:
             try:
-                if prefix == 'h':
+                congresstype = person['terms'][-1]['type'] # senate or house
+                if congresstype == 'rep':
                     keyID = person['id']['bioguide'] # ID used in house votes
-                elif prefix == 's':
+                elif congresstype == 'sen':
                     keyID = person['id']['lis'] # ID used in senate votes
                 bioMap[keyID] =(person['id']['govtrack'],
                                 person['name']['official_full'],
@@ -124,7 +125,7 @@ def init():
     global adjacenyMap
     print "initializing backend..."
     getBios()
-    MAP_FILE = prefix + "_ADJ_MAP.json"
+    MAP_FILE = "ADJ_MAP.json"
     # Pull adjacency mapping from disk if possible
     if os.path.isfile(MAP_FILE):
         json_data = open(MAP_FILE).read()
@@ -133,12 +134,11 @@ def init():
     else:
         for dirname, dirnames, filenames in os.walk(pathToVoteDirs):
             for subdirname in dirnames:
-                if subdirname.startswith(prefix):
-                    success = parseFile(pathToVoteDirs + subdirname + "/data.json")
-                    if success :
-                        print ". Parsed file for " + subdirname
-                    else:
-                        print "X Failed to parse file " + subdirname
+                success = parseFile(pathToVoteDirs + subdirname + "/data.json")
+                if success :
+                    print ". Parsed file for " + subdirname
+                else:
+                    print "X Failed to parse file " + subdirname
         fp = open(MAP_FILE, 'wb')
         json.dump(adjacenyMap, fp)
     print "Done initializing backend."
