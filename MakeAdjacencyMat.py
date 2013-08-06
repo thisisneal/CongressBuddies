@@ -71,11 +71,7 @@ def getIDfromName(name):
     if nameMap.has_key(name.lower()): return nameMap[name.lower()]
     poss = difflib.get_close_matches(name, nameMap.iterkeys())
     if(len(poss) != 0):
-        #TODO: Fix to incorporate other potential candidates
-        potentialNames = []
-        for i in poss:
-            potentialNames.append(nameMap[i])
-        return potentialNames
+        return nameMap[poss[0]]
     return None
 
 
