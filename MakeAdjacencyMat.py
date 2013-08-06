@@ -3,7 +3,7 @@ import json
 import yaml
 import sys
 
-import fuzzySearch as fuzzy
+import difflib
 
 pathToVoteDirs = "votes/2013/"
 
@@ -69,15 +69,11 @@ def getPersonListStr():
 # Return votes ID from a full matched name
 def getIDfromName(name):
     if nameMap.has_key(name.lower()): return (nameMap[name.lower()], False)
-    sml = sys.maxint
-    found = name
-    for n in nameMap.iterkeys():
-        d = fuzzy.dist(name, n)
-        if d < sml:
-            sml = d
-            found = n
-    #print found
-    return (nameMap[found], True)
+    poss = difflib.get_close_matches(name, nameMap.iterkeys())
+    if(len(poss) != 0):
+        #TODO: Fix to incorporate other potential candidates
+        return (nameMap[poss[0]], True)
+    return (None, True)
 
 
 # Get the top N buddies for a given person
