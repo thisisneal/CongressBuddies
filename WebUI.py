@@ -4,9 +4,6 @@ import tornado.web
 import MakeAdjacencyMat as util
 
 class MyFormHandler(tornado.web.RequestHandler):
-    def NotFound(name):
-        self.write(name + """: Not Found""")
-
     def writeForm(self):
         self.write("""Name search: <form action="/" method="get">
                    <input type="text" name="name">
@@ -60,7 +57,7 @@ class MyFormHandler(tornado.web.RequestHandler):
             #TODO: Add feature to see if distance was used
             personID = util.getIDfromName(name)
             if personID == None:
-                NotFound(name)
+                self.write(name + """: Not Found""")
                 return
             if (type(personID) == list):
                 #TODO: Make page for options

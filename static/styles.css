@@ -1,11 +1,17 @@
 /* Image in Text Box */
 .searchTB {
-    background-image: url(static/search_icon.png);
+    background-image: url(search_icon.png);
+    background-repeat: no-repeat;
     background-size: 25px 25px;
-    background-position: 5% center;
-    padding: 4px 4px 4px 22px;
+    background-position: 3% center;
+    padding-left: 10px;
+    font-size: 16px;
     border: 1px solid #CCC;
     border-radius: 6px;
     width: 300px;
     height: 30px;
+}
+
+#matches {
+    width: 200px;
 }
