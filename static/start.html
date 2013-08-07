@@ -7,7 +7,11 @@
 			var words;
 			var auto;
 			var getData;
-
+			function min(x,y){
+				if(x < y)
+					return x;
+				return y;
+			}
 			$(function(){
 				$.get('../personList', function(data){
 					try {
@@ -23,8 +27,8 @@
 			$(document).on('input', '#suggest', function() {
 				var matches = auto.suggest($("#suggest").val());
 				$('#matches').html("");
-				for(var i = 0; i < matches.length; i++)
-					$('#matches').append(matches[i] + "<br>");
+				for(var i = 0; i < min(matches.length, 4); i++)
+					$('#matches').append( "<a href=\"/?name=" + matches[i].replace(" ", "+") + "\">" + matches[i] + "</a><br>");
 			});	
 		</script>
 	</head>
