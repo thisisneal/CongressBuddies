@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <script src="jquery-2.0.3.min.js"></script>
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+      google.load('visualization', '1', {'packages': ['geochart']});
+
+      function getURLParameter(name) {
+        return decodeURI(
+            (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+        );
+      }
+
+      var buddiesData = {};
+      $(function(){
+        $.get('../buddiesData?id=' + getURLParameter("id"), function(data){
+         // try {
+            buddiesData = data;
+            drawRegionsMap();
+      //    } catch(err) {
+     //       console.log(err);
+      //    }
+        });
+      });
+
+      function drawRegionsMap() {
+        var dataArray = [['Region', 'Popularity', 'Size']];
+        for (var broID in buddiesData) {
+          dataArray.push(['US-' + buddiesData[broID][2], 0, 1]);
+        }
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        var options = {
+          region: 'US',
+          displayMode: 'markers',
+          colorAxis: {colors: ['red', 'purple', 'blue']},
+          legend: 'none' // hide color axis
+        };
+
+        var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      };
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

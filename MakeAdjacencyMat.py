@@ -66,6 +66,14 @@ def getParty(personID):
 def getPersonListStr():
     return json.dumps(nameMap.keys())
 
+# Get dictionary of buddies and their associated info
+def getBuddiesStr(personID):
+    buddiesIDs = getBuddies(personID, 5)
+    buddiesObj = {}
+    for broID in buddiesIDs:
+        buddiesObj[broID] = bioMap[broID]
+    return json.dumps(buddiesObj)
+
 # Return votes ID from a full matched name
 def getIDfromName(name):
     if nameMap.has_key(name.lower()): return nameMap[name.lower()]

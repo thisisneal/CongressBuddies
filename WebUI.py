@@ -88,9 +88,18 @@ class MyListHandler(tornado.web.RequestHandler):
         self.set_header("Content-Type", "text/json")
         self.write(util.getPersonListStr())
 
+# Return a json object of the buddies and associated info
+# for a given person
+class MyBuddiesHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header("Content-Type", "text/json")
+        personID = self.get_argument("id", None)
+        self.write(util.getBuddiesStr(personID))
+
 application = tornado.web.Application([
     (r"/", MyFormHandler),
     (r"/personList", MyListHandler),
+    (r"/buddiesData", MyBuddiesHandler),
 ], static_path = "static/")
 
 if __name__ == "__main__":
