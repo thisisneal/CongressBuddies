@@ -29,12 +29,15 @@
 				$('#matches').html("");
 				for(var i = 0; i < min(matches.length, 4); i++)
 					$('#matches').append( "<a href=\"/?name=" + matches[i].replace(" ", "+") + "\">" + matches[i] + "</a><br>");
-			});	
+			});
 		</script>
 	</head>
 	<body>
-        <input type='text' id="suggest" name='search' placeholder="Search..." 
+	<form action="/" method="get">
+        <input type='text' id="suggest" name='name' placeholder="Search..."
         		class="searchTB" autocomplete="off">
+        <input type="submit" value="Submit">
 	    <div id="matches"></div>
+	</form>
     </body>
 </html>
