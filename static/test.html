@@ -26,14 +26,23 @@
       function drawRegionsMap() {
         var dataArray = [['Region', 'Popularity', 'Size']];
         for (var broID in buddiesData) {
-          dataArray.push(['US-' + buddiesData[broID][2], 0, 1]);
+          var party = buddiesData[broID][3];
+          var partyIndex;
+          if(party == 'Democrat') {
+            partyIndex = 3;
+          } else if(party == 'Republican') {
+            partyIndex = 1;
+          } else {
+            partyIndex = 2;
+          }
+          dataArray.push(['US-' + buddiesData[broID][2], partyIndex, 0]);
         }
         var data = google.visualization.arrayToDataTable(dataArray);
 
         var options = {
           region: 'US',
           displayMode: 'markers',
-          colorAxis: {colors: ['red', 'purple', 'blue']},
+          colorAxis: {minValue: 1, maxValue:3, colors: ['red', 'purple', 'blue']},
           legend: 'none' // hide color axis
         };
 
