@@ -28,7 +28,15 @@ class MyFormHandler(tornado.web.RequestHandler):
     def renderResults(self, personID, numBuddies):
         count = 1
         self.set_header("Content-Type", "text/html")
+        headContent = """
+        <html>
+        <head>
+            <title>TITLE</title>
+        </head>
+        """
+        self.write(headContent)
         content1 = """
+        <body>
         <center>
            <img width=100 src="http://www.govtrack.us/data/photos/{curGovID}.jpeg\">
            <br>
@@ -58,6 +66,12 @@ class MyFormHandler(tornado.web.RequestHandler):
                    <input type="text" name="name">
                    <input type="submit" value="Submit">
                    </form>""")
+        self.write("""
+            <iframe width=900 height=500 src='/static/test.html?id={idVal}'></iframe>
+            """.format(idVal=personID))
+        self.write("""</body>
+                   </html>
+                   """)
 
     def get(self):
         name = self.get_argument("name", None)
