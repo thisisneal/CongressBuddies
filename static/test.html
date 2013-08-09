@@ -14,12 +14,8 @@
       var buddiesData = {};
       $(function(){
         $.get('../buddiesData?id=' + getURLParameter("id"), function(data){
-         // try {
-            buddiesData = data;
-            drawRegionsMap();
-      //    } catch(err) {
-     //       console.log(err);
-      //    }
+          buddiesData = data;
+          drawRegionsMap();
         });
       });
 
@@ -41,7 +37,8 @@
 
         var options = {
           region: 'US',
-          displayMode: 'markers',
+          resolution: 'provinces', // show state borders
+          displayMode: 'markers',  // show circle markers
           colorAxis: {minValue: 1, maxValue:3, colors: ['red', 'purple', 'blue']},
           legend: 'none' // hide color axis
         };
