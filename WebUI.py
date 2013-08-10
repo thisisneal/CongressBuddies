@@ -13,17 +13,18 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(name + """: Not Found""")
 
     def writeForm(self):
-        self.write("""Name search: <form action="/" method="get">
-                   <input type="text" name="name">
-                   <input type="submit" value="Submit">
-                   </form> <br/>""")
-        self.write("""<html><body><form action="/" method="get">
-                   ID: <input type="text" name="personID">
-                   <br/>
-                   Num: <input type="text" name="numBuddies">
-                   <input type="submit" value="Submit">
-                   <br/>
-                   </form></body></html>""")
+        self.redirect("static/start.html")
+        # self.write("""Name search: <form action="/" method="get">
+        #            <input type="text" name="name">
+        #            <input type="submit" value="Submit">
+        #            </form> <br/>""")
+        # self.write("""<html><body><form action="/" method="get">
+        #            ID: <input type="text" name="personID">
+        #            <br/>
+        #            Num: <input type="text" name="numBuddies">
+        #            <input type="submit" value="Submit">
+        #            <br/>
+        #            </form></body></html>""")
 
     def renderResults(self, personID, numBuddies):
         count = 1
@@ -49,6 +50,8 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(content1)
         bros = util.getBuddies(personID, numBuddies)
         self.write("<table border=\"1\">")
+        self.write("<tr><td>")
+        self.write("<table border=\"1\">")
         for friendID in bros:
             self.write("<tr>")
             self.write("<td> <b>" + str(count) + ".</b> </td>")
@@ -66,9 +69,11 @@ class MyFormHandler(tornado.web.RequestHandler):
                    <input type="text" name="name">
                    <input type="submit" value="Submit">
                    </form>""")
+        self.write("</td><td>")
         self.write("""
             <iframe width=900 height=500 src='/static/map.html?id={idVal}'></iframe>
             """.format(idVal=personID))
+        self.write("</td></tr>")
         self.write("""</body>
                    </html>
                    """)
