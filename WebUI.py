@@ -67,7 +67,7 @@ class MyFormHandler(tornado.web.RequestHandler):
                    <input type="submit" value="Submit">
                    </form>""")
         self.write("""
-            <iframe width=900 height=500 src='/static/test.html?id={idVal}'></iframe>
+            <iframe width=900 height=500 src='/static/map.html?id={idVal}'></iframe>
             """.format(idVal=personID))
         self.write("""</body>
                    </html>
