@@ -27,6 +27,8 @@ class MyFormHandler(tornado.web.RequestHandler):
         #            </form></body></html>""")
 
     def renderResults(self, personID, numBuddies):
+        if numBuddies > 10: # cap number of results displayed
+            numBuddies = 10
         count = 1
         self.set_header("Content-Type", "text/html")
         headContent = """
@@ -36,15 +38,14 @@ class MyFormHandler(tornado.web.RequestHandler):
         </head>
         """
         self.write(headContent)
-        content1 = """
+        content1 = unicode("""
         <body>
         <center>
            <img width=100 src="http://www.govtrack.us/data/photos/{curGovID}.jpeg\">
            <br>
            {curName} : {curParty} : {curState}
-        </center>
-        """.format(curGovID = util.getGovID(personID),
-                   curName  = util.getName(personID),
+        """).format(curGovID = util.getGovID(personID),
+                   curName  = util.getName(personID).encode('ascii', 'xmlcharrefreplace'),
                    curParty = util.getParty(personID),
                    curState = util.getState(personID))
         self.write(content1)
@@ -58,7 +59,7 @@ class MyFormHandler(tornado.web.RequestHandler):
             govID = util.getGovID(friendID)
             self.write("""<td> <img width=100 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\">")
             hyperlink = "/?personID=" + friendID + "&numBuddies=" + str(numBuddies)
-            self.write("\n<a href='" + hyperlink + "'> " + util.getName(friendID) + "</a>")
+            self.write("\n<a href='" + hyperlink + "'> " + util.getName(friendID).encode('ascii', 'xmlcharrefreplace') + "</a>")
             self.write(""" <br> </td> """)
             count += 1
             self.write("<td>" + util.getState(friendID) + "</td>")
@@ -74,7 +75,8 @@ class MyFormHandler(tornado.web.RequestHandler):
             <iframe width=900 height=500 src='/static/map.html?id={idVal}'></iframe>
             """.format(idVal=personID))
         self.write("</td></tr>")
-        self.write("""</body>
+        self.write("""</center>
+                    </body>
                    </html>
                    """)
 
