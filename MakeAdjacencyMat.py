@@ -25,9 +25,22 @@ def incrementSimilarity(perA, perB):
 
 # Given an array of individual votes that matched vote type and bill,
 # increment the similarity counts in adjaceny matrix between all people involved
-def countSameVotes(votes):
+def countSameVotes(votes,vote_id):
     for vote in votes:
         cur_person = vote['id']
+        #bioMap[cur_person] = bioMap[cur_person] + ("test",)
+
+        bioMap_list = list(bioMap[cur_person])
+
+        vote_record_list = list(bioMap_list[4])
+        #print "Got vote id:" + vote_id
+        vote_record_list.append(vote_id)
+        bioMap_list[4] = tuple(vote_record_list)
+
+        bioMap[cur_person] = tuple(bioMap_list)
+
+        #print "this is a tuple: %s" % (bioMap[cur_person],)
+
         for vote in votes:
             other_person = vote['id']
             incrementSimilarityBi(cur_person, other_person)
@@ -40,9 +53,9 @@ def parseFile(jsonFile):
         votes = data['votes']
         #pres = votes['Present']
         ayes = votes['Yea']
-        countSameVotes(ayes)
+        countSameVotes(ayes,data['vote_id'])
         nays = votes['Nay']
-        countSameVotes(nays)
+        countSameVotes(nays,data['vote_id'])
         return True
     except Exception, err:
         #print Exception, err
@@ -116,11 +129,10 @@ def getBios():
                 bioMap[keyID] =(person['id']['govtrack'],
                                 person['name']['official_full'],
                                 person['terms'][-1]['state'],
-                                person['terms'][-1]['party'])
+                                person['terms'][-1]['party'],
+                                ())
             except:
                 pass
-        fp = open(BIO_FILE, 'wb')
-        json.dump(bioMap, fp)
     nameMap = {(v[1].lower()):k for k, v in bioMap.items()}
 
 # Prepare lookup maps
@@ -144,6 +156,9 @@ def init():
                     print "X Failed to parse file " + subdirname
         fp = open(MAP_FILE, 'wb')
         json.dump(adjacenyMap, fp)
+    BIO_FILE = "BIO_MAP.json" # different serialization for house/senate
+    fp = open(BIO_FILE, 'wb')
+    json.dump(bioMap, fp)
     print "Done initializing backend."
     # Ad hoc:
     #buddies = getBuddies("P000523", 5)

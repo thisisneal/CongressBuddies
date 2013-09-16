@@ -13,6 +13,9 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(name + """: Not Found""")
 
     def writeForm(self):
+        print util.getWhole("A000055")
+        print util.getName("A000055").encode('ascii', 'xmlcharrefreplace')
+        print "here"
         self.redirect("static/start.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
