@@ -75,6 +75,9 @@ def getState(personID):
 def getParty(personID):
     return bioMap[personID][3]
 
+def getVotingRecordTuple(personID):
+    return bioMap[personID][4]
+
 # Get a list of names of all congress people as a string
 def getPersonListStr():
     return json.dumps(nameMap.keys())

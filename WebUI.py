@@ -13,9 +13,9 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(name + """: Not Found""")
 
     def writeForm(self):
-        print util.getWhole("A000055")
-        print util.getName("A000055").encode('ascii', 'xmlcharrefreplace')
-        print "here"
+
+        print "this is a tuple: %s" % (util.getVotingRecordTuple("A000055"),)
+
         self.redirect("static/start.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
@@ -120,10 +120,16 @@ class MyBuddiesHandler(tornado.web.RequestHandler):
         personID = self.get_argument("id", None)
         self.write(util.getBuddiesStr(personID))
 
+class VotingRecordHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write(str(range(1, 10)))
+        self.finish()
+
 application = tornado.web.Application([
     (r"/", MyFormHandler),
     (r"/personList", MyListHandler),
     (r"/buddiesData", MyBuddiesHandler),
+    (r"/ajax", VotingRecordHandler),
 ], static_path = "static/")
 
 if __name__ == "__main__":
