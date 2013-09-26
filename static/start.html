@@ -3,6 +3,21 @@
 		<link rel="stylesheet" type="text/css" href="styles.css">
 		<script src="jquery-2.0.3.min.js"></script>
 		<script src="suggest.js"></script>
+    <script type="text/javascript">
+function loadXMLDoc(url)
+{
+  alert('loadxml');
+if (window.XMLHttpRequest)
+{
+xmlhttp = new XMLHttpRequest();
+}
+xmlhttp.open("GET",url,false);
+xmlhttp.send(null);
+alert(xmlhttp.responseText);
+document.getElementById('test').innerHTML=xmlhttp.responseText;
+}
+</script>
+
 		<script type="text/javascript">
 			var words;
 			var auto;
@@ -39,5 +54,7 @@
         <input type="submit" value="Submit">
 	    <div id="matches"></div>
 	</form>
+    <button type="button" onclick="loadXMLDoc('/ajax')">Click Me</button>
+        <img src="capitol.png" alt="Smiley face" >
     </body>
 </html>
