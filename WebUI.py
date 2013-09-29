@@ -40,6 +40,12 @@ class MyFormHandler(tornado.web.RequestHandler):
         <html>
         <head>
             <title>TITLE</title>
+            <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+             <style>
+            .table thead>tr>th, .table tbody>tr>th, .table tfoot>tr>th, .table thead>tr>td, .table tbody>tr>td, .table tfoot>tr>td {
+                padding-top:0px;
+            }
+            </style>
         </head>
         """
         self.write(headContent)
@@ -55,30 +61,39 @@ class MyFormHandler(tornado.web.RequestHandler):
                    curState = util.getState(personID))
         self.write(content1)
         bros = util.getBuddies(personID, numBuddies)
-        self.write("<table border=\"1\">")
-        self.write("<tr><td>")
-        self.write("<table border=\"1\">")
+
+        self.write("<table class=\"table\" style = \"width: 750px;\">")
+        self.write("<tr>")
         for friendID in bros:
-            self.write("<tr>")
-            self.write("<td> <b>" + str(count) + ".</b> </td>")
             govID = util.getGovID(friendID)
             self.write("""<td> <img width=100 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\">")
+        self.write("</tr>")
+
+        self.write("<tr>")
+        for friendID in bros:
+            self.write("<td>")
             hyperlink = "/?personID=" + friendID + "&numBuddies=" + str(numBuddies)
             self.write("\n<a href='" + hyperlink + "'> " + util.getName(friendID).encode('ascii', 'xmlcharrefreplace') + "</a>")
-            self.write(""" <br> </td> """)
-            count += 1
-            self.write("<td>" + util.getState(friendID) + "</td>")
+            self.write("</td>")
+        self.write("</tr>")
+
+        self.write("<tr>")
+        for friendID in bros:
             self.write("<td>" + util.getParty(friendID) + "</td>")
-            self.write("</tr>")
+        self.write("</tr>")
+
+        self.write("<tr>")
+        for friendID in bros:
+            self.write("<td>" + util.getState(friendID) + "</td>")
+        self.write("</tr>")
+
+
         self.write("</table>")
         self.write("""Name search: <form action="/" method="get">
                    <input type="text" name="name">
                    <input type="submit" value="Submit">
                    </form>""")
         self.write("</td><td>")
-        self.write("""
-            <iframe width=900 height=500 src='/static/map.html?id={idVal}'></iframe>
-            """.format(idVal=personID))
         self.write("</td></tr>")
         self.write("""</center>
                     </body>
@@ -136,11 +151,14 @@ class SearchMemberHandler(tornado.web.RequestHandler):
             return
 
         return_dict = dict()
+        count = 0
         for k in dataMap:
+            if count == 5:
+                break
             if query in k["name"]["official_full"].lower():
                 return_dict[k["name"]["official_full"]] = dict()
                 return_dict[k["name"]["official_full"]]["id"] = k["id"]["govtrack"]
-
+                count += 1
         print json.dumps(return_dict)
         self.write(json_encode(return_dict))
 
@@ -153,9 +171,9 @@ application = tornado.web.Application([
 ], static_path = "static/")
 
 if __name__ == "__main__":
-    f = open('legislators-current.yaml')
-    dataMap = yaml.safe_load(f)
-    f.close()
+    #f = open('legislators-current.yaml')
+    #dataMap = yaml.safe_load(f)
+    #f.close()
     util.init()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()

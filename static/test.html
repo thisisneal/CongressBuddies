@@ -7,7 +7,7 @@
 
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/themes/black-tie/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui-modified.css">
 
   </head>
   <body>
@@ -75,15 +75,24 @@ $(document).ready(function () {
     }).data("uiAutocomplete")._renderItem = function (ul, item) {
         return $("<li />")
             .data("item.autocomplete", item)
-            .append("<a><img src='" + item.avatar + "' />" + item.value + "</a>")
+            .append("<a><img class = \"search_autocomplete_image\" src='" + item.avatar + "' />" + "<span class = \"search_autocomplete_name\">" + item.value + "</span></a>")
             .appendTo(ul);
     };    
 });
 </script>
 
 <style type="text/css">
-  /*img { width: 25px; height: 25px; padding-right: 10px;}*/
-  .ui-autocomplete > li { height: 40px; }
+  .search_autocomplete_image {
+    width: 55px; height: 55px; padding-right: 10px;
+    padding-top: 8px;
+  }
+  .ui-autocomplete > li { height: 72px; 
+    font: 24px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+  .search_autocomplete_name {
+    position: absolute;
+    padding-top: 15px;
+  }
   }
 </style>
       <!--
