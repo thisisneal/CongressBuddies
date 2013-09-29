@@ -2,39 +2,91 @@
 <html>
   <head>
     <title>Bootstrap 101 Template</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
     <link href="styles.css" rel="stylesheet" type="text/css" />
 
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="http://twitter.github.com/typeahead.js/releases/latest/typeahead.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/themes/black-tie/jquery-ui.css">
 
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src='http://twitter.github.com/typeahead.js/releases/latest/typeahead.js'></script>
-    <link rel='stylesheet' href='http://twitter.github.com/typeahead.js/releases/latest/typeahead.css' />
   </head>
   <body>
 
-    <div class="container">
+  <div class="container">
+    <input id="auto" type="text" />
+  </div>
 
-<div>
-<form id="myForm" action="destination.html">
-<span class="twitter-typeahead" style="position: relative; display: inline-block;"><input class="tt-hint" type="text" autocomplete="off" spellcheck="off" disabled="" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; background-attachment: scroll; background-clip: border-box; background-color: rgb(255, 255, 255); background-image: none; background-origin: padding-box; background-size: auto; background-position: 0% 0%; background-repeat: repeat repeat;"><input id="home_search" type="text" placeholder="This appears when you load page" size="100" class="tt-query" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;"><span style="position: absolute; left: -9999px; visibility: hidden; white-space: nowrap; font-family: 'Lucida Grande'; font-size: 11px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></span><span class="tt-dropdown-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;"></span></span>
-<input style="display:none;" id="hiddeninputid" name="hiddeninputname" value="default">
-<input type="submit" value="Go">
-</form>
-</div>
+  <img class = "home_logo" src="capitol.png">
 
 <script>
-$('#home_search').typeahead({                                
-  name: 'home_search',                                                          
-  prefetch: 'test.json',                                         
-  limit: 10                                                                   
+test = ""
+$(document).ready(function () {
+    $("#auto").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://localhost:8888/search",
+                data: {
+                    query: request.term,
+                    pagesize: 10
+                },
+                jsonp: "jsonp",
+                dataType: "jsonp",
+                error: function(jqXHR, textStatus) {
+                  //alert( "Request failed: " + textStatus );
+                },
+                complete: function (xhr, status) {
+                if (status === 'error' || !xhr.responseText) {
+                    //alert("error");
+                  }
+                  else {
+                      var data = JSON.parse(xhr.responseText);
+
+                      var realArray = $.makeArray( data )
+                      response($.map( data, function(val, key) {
+                        // Do something
+                        console.log(val);
+                        console.log(key);
+                        return {
+                            value: key,
+                            avatar: "http://www.govtrack.us/data/photos/" + val["id"] + ".jpeg"
+                        };
+
+                      }));
+
+                      /*
+                      for(var full_name in data){
+                        console.log(full_name);
+                        console.log(data[full_name]["id"]);
+                      }
+                     */
+
+                  }
+                },
+                success: function(data) {
+                    response($.map(data.users, function(el, index) {
+                        return {
+                            value: el.display_name,
+                            avatar: "http://www.govtrack.us/data/photos/{" +  + "curGovID}.jpeg"
+                        };
+                    }));
+                }
+            });
+        }
+    }).data("uiAutocomplete")._renderItem = function (ul, item) {
+        return $("<li />")
+            .data("item.autocomplete", item)
+            .append("<a><img src='" + item.avatar + "' />" + item.value + "</a>")
+            .appendTo(ul);
+    };    
 });
 </script>
+
+<style type="text/css">
+  img { width: 25px; height: 25px; padding-right: 10px;}
+  .ui-autocomplete > li { height: 40px; }
+  }
+</style>
       <!--
-      <img class = "home_logo" src="capitol.png">
       <input class = "home_search" type = "text" placeholder = "search">
       <div class="demo">
           <span class="twitter-typeahead" style="position: relative; display: inline-block;"><input class="tt-hint" type="text" autocomplete="off" spellcheck="off" disabled="" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; background-attachment: scroll; background-clip: border-box; background-color: rgb(255, 255, 255); background-image: none; background-origin: padding-box; background-size: auto; background-position: 0% 0%; background-repeat: repeat repeat;"><input class="typeahead tt-query" type="text" placeholder="countries" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;"><span style="position: absolute; left: -9999px; visibility: hidden; white-space: nowrap; font-family: 'Lucida Grande'; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></span><span class="tt-dropdown-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;"></span></span>

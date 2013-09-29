@@ -1,6 +1,8 @@
 import tornado.ioloop
 import tornado.web
-
+import yaml
+import json
+from tornado.escape import json_encode
 import MakeAdjacencyMat as util
 
 class MyFormHandler(tornado.web.RequestHandler):
@@ -125,16 +127,36 @@ class VotingRecordHandler(tornado.web.RequestHandler):
         self.write(str(range(1, 10)))
         self.finish()
 
+class SearchMemberHandler(tornado.web.RequestHandler):
+    def get(self):
+        global dataMap
+        query = self.get_argument("query", None)
+
+        if len(query) < 3:
+            return
+
+        return_dict = dict()
+        for k in dataMap:
+            if query in k["name"]["official_full"].lower():
+                return_dict[k["name"]["official_full"]] = dict()
+                return_dict[k["name"]["official_full"]]["id"] = k["id"]["govtrack"]
+
+        print json.dumps(return_dict)
+        self.write(json_encode(return_dict))
+
 application = tornado.web.Application([
     (r"/", MyFormHandler),
     (r"/personList", MyListHandler),
     (r"/buddiesData", MyBuddiesHandler),
     (r"/ajax", VotingRecordHandler),
+    (r"/search", SearchMemberHandler),
 ], static_path = "static/")
 
 if __name__ == "__main__":
+    f = open('legislators-current.yaml')
+    dataMap = yaml.safe_load(f)
+    f.close()
     util.init()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
 
-# H001032
