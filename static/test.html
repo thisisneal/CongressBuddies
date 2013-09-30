@@ -15,7 +15,7 @@
 
   <div class="container" style = "max-width:400px">
     <img style="" class = "home_logo" src="capitol13.png">
-    <input id="auto" type="text" />
+      <input id="auto" type="text" />
   </div>
 
 
@@ -79,6 +79,16 @@ $(document).ready(function () {
             .append("<a><img class = \"search_autocomplete_image\" src='" + item.avatar + "' />" + "<span class = \"search_autocomplete_name\">" + item.value + "</span></a>")
             .appendTo(ul);
     };    
+
+  $( "#auto" ).autocomplete({ autoFocus: true });
+    
+    $("#auto").keydown(function(e){
+      if (e.keyCode === 13){
+       if(document.getElementById("ui-id-1").childNodes.length != 0) {
+          window.location = "/?name=" + $("#auto").val();
+        }
+      }
+    });
 });
 </script>
 

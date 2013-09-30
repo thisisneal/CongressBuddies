@@ -155,6 +155,9 @@ class SearchMemberHandler(tornado.web.RequestHandler):
         global dataMap
         query = self.get_argument("query", None)
 
+        print "got query: "
+        print query
+
         if len(query) < 3:
             return
 
@@ -163,7 +166,8 @@ class SearchMemberHandler(tornado.web.RequestHandler):
         for k in dataMap:
             if count == 5:
                 break
-            if query in k["name"]["official_full"].lower():
+            if query.lower() in k["name"]["official_full"].lower():
+                print "FOUND FOUND FOUND"
                 return_dict[k["name"]["official_full"]] = dict()
                 return_dict[k["name"]["official_full"]]["id"] = k["id"]["govtrack"]
                 count += 1
@@ -179,9 +183,9 @@ application = tornado.web.Application([
 ], static_path = "static/")
 
 if __name__ == "__main__":
-    #f = open('legislators-current.yaml')
-    #dataMap = yaml.safe_load(f)
-    #f.close()
+    f = open('legislators-current.yaml')
+    dataMap = yaml.safe_load(f)
+    f.close()
     util.init()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
