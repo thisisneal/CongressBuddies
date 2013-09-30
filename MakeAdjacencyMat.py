@@ -105,6 +105,8 @@ def getBuddies(personID, num):
         friends = adjacenyMap[personID]
         sortedListTuples = sorted(friends.items(), key=lambda x: x[1], reverse=True)
         sortedNameList = []
+        print "sorted: "
+        return sortedListTuples[0:num+1]
         for curTuple in sortedListTuples:
             sortedNameList.append(curTuple[0])
         return sortedNameList[1:num+1]

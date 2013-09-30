@@ -40,6 +40,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         <html>
         <head>
             <title>TITLE</title>
+            <link href="/static/styles.css" rel="stylesheet" type="text/css" />
             <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
              <style>
             .table thead>tr>th, .table tbody>tr>th, .table tfoot>tr>th, .table thead>tr>td, .table tbody>tr>td, .table tfoot>tr>td {
@@ -49,50 +50,56 @@ class MyFormHandler(tornado.web.RequestHandler):
         </head>
         """
         self.write(headContent)
-        content1 = unicode("""
-        <body>
-        <center>
-           <img width=100 src="http://www.govtrack.us/data/photos/{curGovID}.jpeg\">
-           <br>
-           {curName} : {curParty} : {curState}
-        """).format(curGovID = util.getGovID(personID),
-                   curName  = util.getName(personID).encode('ascii', 'xmlcharrefreplace'),
-                   curParty = util.getParty(personID),
-                   curState = util.getState(personID))
-        self.write(content1)
         bros = util.getBuddies(personID, numBuddies)
+        print "Result: "
+        print bros
 
-        self.write("<table class=\"table\" style = \"width: 750px;\">")
+        self.write("""<div class="container" style="margin-top: 60px; max-width: 270px; height:80px;">""");
+        self.write("<table class=\"table\">")
         self.write("<tr>")
-        for friendID in bros:
-            govID = util.getGovID(friendID)
-            self.write("""<td> <img width=100 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\">")
+        self.write("<td style=\"border: none;\">")
+        self.write("""<div class = "img_holder">""")
+        self.write("<img width=70 src=\"http://www.govtrack.us/data/photos/" + str(util.getGovID(personID)) + ".jpeg\">")
+        self.write("</div>")
+        self.write("<span class = \"primary_name\">" + util.getName(personID).encode('ascii', 'xmlcharrefreplace') + "</span>")
+        self.write("<span class = \"result_party\">" + util.getParty(personID) + "</span>")
+        self.write("<span class = \"result_state\">" + util.getState(personID) + "</span>")
+        self.write("</td>")
         self.write("</tr>")
+        self.write("</table>")
+        self.write("</div>");
 
-        self.write("<tr>")
+        self.write("""<div class="container" style="max-width: 600px;">""");
+        self.write("<table class=\"table\">")
+        divide_with = bros[0][1]
+        count = 0;
         for friendID in bros:
-            self.write("<td>")
-            hyperlink = "/?personID=" + friendID + "&numBuddies=" + str(numBuddies)
-            self.write("\n<a href='" + hyperlink + "'> " + util.getName(friendID).encode('ascii', 'xmlcharrefreplace') + "</a>")
+            count+=1
+            if count == 1:
+                continue
+
+            self.write("<tr>")
+            govID = util.getGovID(friendID[0])
+            self.write("<td style=\"border: none;\">")
+            print "value: "
+            if int(int(friendID[1])/float(divide_with) * 100) > 89:
+                self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 580)) + "px;\">wide</div>")
+            else:
+                self.write("<div class = \"blue_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 580)) + "px;\">wide</div>")
+            self.write("""<div class = "img_holder"><img width=70 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\"></div>")
+
+            hyperlink = "/?personID=" + friendID[0] + "&numBuddies=" + str(numBuddies)
+            self.write("\n<a class = \"result_url\" href='" + hyperlink + "'> " + util.getName(friendID[0]).encode('ascii', 'xmlcharrefreplace') + "</a>")
+            self.write("<span class = \"result_party\">" + util.getParty(friendID[0]) + "</span>")
+            self.write("<span class = \"result_state\">" + util.getState(friendID[0]) + "</span>")
+            self.write("<span style = \"margin-left: " + str(int(int(friendID[1])/float(divide_with) * 580)+5)  + "px;\" class = \"result_percent\">" + str(round((int(friendID[1])/float(divide_with) * 100),2)) + "%</span>")
             self.write("</td>")
-        self.write("</tr>")
 
-        self.write("<tr>")
-        for friendID in bros:
-            self.write("<td>" + util.getParty(friendID) + "</td>")
-        self.write("</tr>")
-
-        self.write("<tr>")
-        for friendID in bros:
-            self.write("<td>" + util.getState(friendID) + "</td>")
-        self.write("</tr>")
-
+            self.write("</tr>")
 
         self.write("</table>")
-        self.write("""Name search: <form action="/" method="get">
-                   <input type="text" name="name">
-                   <input type="submit" value="Submit">
-                   </form>""")
+        self.write("</div>");
+
         self.write("</td><td>")
         self.write("</td></tr>")
         self.write("""</center>
