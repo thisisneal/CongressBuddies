@@ -21,8 +21,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.redirect("static/start.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
-        #            <input type="submit" value="Submit">
-        #            </form> <br/>""")
+        #            <input type="submit" >""")
         # self.write("""<html><body><form action="/" method="get">
         #            ID: <input type="text" name="personID">
         #            <br/>
@@ -48,6 +47,7 @@ class MyFormHandler(tornado.web.RequestHandler):
             }
             </style>
         </head>
+        <body style = "background: white">
         """
         self.write(headContent)
         bros = util.getBuddies(personID, numBuddies)
@@ -69,7 +69,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write("</table>")
         self.write("</div>");
 
-        self.write("""<div class="container" style="max-width: 600px;">""");
+        self.write("""<div class="container" style="max-width: 1300px;">""");
         self.write("<table class=\"table\">")
         divide_with = bros[0][1]
         count = 0;
@@ -83,25 +83,26 @@ class MyFormHandler(tornado.web.RequestHandler):
             self.write("<td style=\"border: none;\">")
             print "value: "
             if int(int(friendID[1])/float(divide_with) * 100) > 89:
-                self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 580)) + "px;\">wide</div>")
+                self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">wide</div>")
             else:
-                self.write("<div class = \"blue_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 580)) + "px;\">wide</div>")
+                self.write("<div class = \"blue_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">wide</div>")
             self.write("""<div class = "img_holder"><img width=70 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\"></div>")
 
             hyperlink = "/?personID=" + friendID[0] + "&numBuddies=" + str(numBuddies)
             self.write("\n<a class = \"result_url\" href='" + hyperlink + "'> " + util.getName(friendID[0]).encode('ascii', 'xmlcharrefreplace') + "</a>")
             self.write("<span class = \"result_party\">" + util.getParty(friendID[0]) + "</span>")
             self.write("<span class = \"result_state\">" + util.getState(friendID[0]) + "</span>")
-            self.write("<span style = \"margin-left: " + str(int(int(friendID[1])/float(divide_with) * 580)+5)  + "px;\" class = \"result_percent\">" + str(round((int(friendID[1])/float(divide_with) * 100),2)) + "%</span>")
+            #self.write("<span style = \"margin-left: " + str(int(int(friendID[1])/float(divide_with) * 280)+5)  + "px;\" class = \"result_percent\">" + str(round((int(friendID[1])/float(divide_with) * 100),2)) + "%</span>")
             self.write("</td>")
-
             self.write("</tr>")
-
         self.write("</table>")
+        self.write("""
+            <iframe width = 950 height = 530 style = "overflow = hidden; width=900px; margin-left: 300px;margin-top: -500px;background: none;border:none; height=500px;" src='/static/map.html?id={idVal}'></iframe>""".format(idVal=personID))
         self.write("</div>");
 
         self.write("</td><td>")
         self.write("</td></tr>")
+        self.write("""<img style="position: absolute;top: 100px;left: 401px;" class = "home_logo" src="static/capitol13.png">""")
         self.write("""</center>
                     </body>
                    </html>

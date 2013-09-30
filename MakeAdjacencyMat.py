@@ -87,7 +87,7 @@ def getBuddiesStr(personID):
     buddiesIDs = getBuddies(personID, 5)
     buddiesObj = {}
     for broID in buddiesIDs:
-        buddiesObj[broID] = bioMap[broID]
+        buddiesObj[broID[0]] = bioMap[broID[0]]
     return json.dumps(buddiesObj)
 
 # Return votes ID from a full matched name
