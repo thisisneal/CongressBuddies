@@ -1,4 +1,44 @@
 /* Image in Text Box */
+
+#chart {
+  margin-top: -475px;
+  margin-left: 220px;
+}
+
+path {
+  stroke-linejoin: round;
+}
+
+.districts {
+  fill: rgba(120,130,145,0.75);
+}
+
+.repub-districts {
+  fill: red;
+}
+
+.dem-districts {
+  fill: blue;
+}
+
+.districts :hover {
+  fill: orange;
+}
+
+.district-boundaries {
+  pointer-events: none;
+  fill: none;
+  stroke: #ddd;
+}
+
+
+.state-boundaries {
+  pointer-events: none;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
 .searchTB {
     background-image: url(search_icon.png);
     background-repeat: no-repeat;
@@ -14,6 +54,12 @@
 
 #matches {
     width: 200px;
+}
+
+#top_bar {
+  height: 60px;
+  background: white;
+  border-bottom: 1px solid lightgray;
 }
 
 body {
@@ -82,6 +128,12 @@ background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
   width: 400px;
 }
 
+.bar_logo {
+  margin-left: 0px;
+  width: 150px;
+  margin-top: 3px;
+}
+
 #home_search {
   width: 200px;
   border:1px solid transparent;
@@ -90,6 +142,18 @@ background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
 
 .tt-hint-extra {
   position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; background-attachment: scroll; background-clip: border-box; background-color: rgb(255, 255, 255); background-image: none; background-origin: padding-box; background-size: auto; background-position: 0% 0%; background-repeat: repeat repeat;width: 200px;height: 25px;background: #eeeeee;   background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));   background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%);   background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%);   background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%);   background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%);   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 );   background: #eeeeee;   background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));   background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%);   background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%);   background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%);   background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%);   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 );   background: #eeeeee;   background: -moz-linear-gradient(top, #eeeeee 0%, #eeeeee 100%);   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#eeeeee));   background: -webkit-linear-gradient(top, #eeeeee 0%,#eeeeee 100%);   background: -o-linear-gradient(top, #eeeeee 0%,#eeeeee 100%);   background: -ms-linear-gradient(top, #eeeeee 0%,#eeeeee 100%);   background: linear-gradient(to bottom, #eeeeee 0%,#eeeeee 100%);   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#eeeeee',GradientType=0 );   background: #eeeeee;   background: -moz-linear-gradient(top, #eeeeee 0%, #eeeeee 100%);   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#eeeeee));   background: -webkit-linear-gradient(top, #eeeeee 0%,#eeeeee 100%);   background: -o-linear-gradient(top, #eeeeee 0%,#eeeeee 100%);   background: -ms-linear-gradient(top, #eeeeee 0%,#eeeeee 100%);   background: linear-gradient(to bottom, #eeeeee 0%,#eeeeee 100%);   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#eeeeee',GradientType=0 );   background: #ffffff;   background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));   background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);   background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);   background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);   background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );   background: #ffffff;   background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed));   background: -webkit-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);   background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);   background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);   background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%); font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#top_search {
+  background: white;
+  border: 1px solid lightgray;
+  position: absolute;
+  right: 10px;
+  outline: none;
+  height: 25px;
+  width: 250px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  top: 15px;
 }
 
 #auto {
@@ -171,7 +235,7 @@ td {
   background: -ms-linear-gradient(top, rgba(180,223,91,1) 100%,rgba(180,223,91,1) 100%); /* IE10+ */
   background: linear-gradient(to bottom, rgba(180,223,91,1) 100%,rgba(180,223,91,1) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4df5b', endColorstr='#b4df5b',GradientType=0 ); /* IE6-9 */
-  background: whitesmoke;
+  background: none;
 }
 
 .blue_bar {
@@ -186,7 +250,7 @@ td {
   background: -ms-linear-gradient(top, rgba(195,217,255,1) 0%,rgba(177,200,239,1) 100%,rgba(152,176,217,1) 100%); /* IE10+ */
   background: linear-gradient(to bottom, rgba(195,217,255,1) 0%,rgba(177,200,239,1) 100%,rgba(152,176,217,1) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3d9ff', endColorstr='#98b0d9',GradientType=0 ); /* IE6-9 */
-  background: whitesmoke;
+  background: none;
 }
 
 .img_holder {

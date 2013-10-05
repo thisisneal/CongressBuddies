@@ -28,16 +28,14 @@ def incrementSimilarity(perA, perB):
 def countSameVotes(votes,vote_id):
     for vote in votes:
         cur_person = vote['id']
+
         #bioMap[cur_person] = bioMap[cur_person] + ("test",)
-
-        bioMap_list = list(bioMap[cur_person])
-
-        vote_record_list = list(bioMap_list[4])
+        #bioMap_list = list(bioMap[cur_person])
+        #vote_record_list = list(bioMap_list[4])
         #print "Got vote id:" + vote_id
-        vote_record_list.append(vote_id)
-        bioMap_list[4] = tuple(vote_record_list)
-
-        bioMap[cur_person] = tuple(bioMap_list)
+        #vote_record_list.append(vote_id)
+        #bioMap_list[4] = tuple(vote_record_list)
+        #bioMap[cur_person] = tuple(bioMap_list)
 
         #print "this is a tuple: %s" % (bioMap[cur_person],)
 
@@ -75,7 +73,7 @@ def getState(personID):
 def getParty(personID):
     return bioMap[personID][3]
 
-def getVotingRecordTuple(personID):
+def getDistrict(personID):
     return bioMap[personID][4]
 
 # Get a list of names of all congress people as a string
@@ -131,11 +129,18 @@ def getBios():
                     keyID = person['id']['bioguide'] # ID used in house votes
                 elif congresstype == 'sen':
                     keyID = person['id']['lis'] # ID used in senate votes
+
+                if 'district' in person['terms'][-1]:
+                    district = person['terms'][-1]['district']
+                else:
+                    district = ""
+
                 bioMap[keyID] =(person['id']['govtrack'],
                                 person['name']['official_full'],
                                 person['terms'][-1]['state'],
                                 person['terms'][-1]['party'],
-                                ())
+                                district
+                                )
             except:
                 pass
     nameMap = {(v[1].lower()):k for k, v in bioMap.items()}

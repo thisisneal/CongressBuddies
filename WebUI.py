@@ -16,8 +16,6 @@ class MyFormHandler(tornado.web.RequestHandler):
 
     def writeForm(self):
 
-        print "this is a tuple: %s" % (util.getVotingRecordTuple("A000055"),)
-
         self.redirect("static/start.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
@@ -31,14 +29,34 @@ class MyFormHandler(tornado.web.RequestHandler):
         #            </form></body></html>""")
 
     def renderResults(self, personID, numBuddies):
+
+        #Parse us-state-names.tsv
+        #ex. CA
+            #code: 6
+            #name: California
+
+        state_info ={}
+        with open("static/js/us-state-names.tsv") as f:
+            for line in f:
+                print line.split(None,2)
+                (code,state_id,name) =  line.split(None,2)
+                state_info[state_id]= {}
+                state_info[state_id]["code"] = code
+                state_info[state_id]["name"] = name
+
         if numBuddies > 10: # cap number of results displayed
             numBuddies = 10
         count = 1
         self.set_header("Content-Type", "text/html")
         headContent = """
+        <!DOCTYPE html>
         <html>
         <head>
             <title>TITLE</title>
+
+            <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+            <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui-modified.css">
             <link href="/static/styles.css" rel="stylesheet" type="text/css" />
             <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
              <style>
@@ -47,14 +65,114 @@ class MyFormHandler(tornado.web.RequestHandler):
             }
             </style>
         </head>
-        <body style = "background: white">
-        """
+        <body>
+
+        <div id = "top_bar">
+            <img style="" class = "bar_logo" src="static/capitol13.png">
+            <input id="top_search" type="text" />
+        </div>
+
+        <script>
+test = ""
+$(document).ready(function () {
+    $("#top_search").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://localhost:8888/search",
+                data: {
+                    query: request.term,
+                    pagesize: 10
+                },
+                jsonp: "jsonp",
+                dataType: "jsonp",
+                error: function(jqXHR, textStatus) {
+                  //alert( "Request failed: " + textStatus );
+                },
+                complete: function (xhr, status) {
+                if (status === 'error' || !xhr.responseText) {
+                    //alert("error");
+                  }
+                  else {
+                      var data = JSON.parse(xhr.responseText);
+
+                      var realArray = $.makeArray( data )
+                      response($.map( data, function(val, key) {
+                        // Do something
+                        console.log(val);
+                        console.log(key);
+                        return {
+                            value: key,
+                            avatar: "http://www.govtrack.us/data/photos/" + val["id"] + ".jpeg"
+                        };
+
+                      }));
+
+                      /*
+                      for(var full_name in data){
+                        console.log(full_name);
+                        console.log(data[full_name]["id"]);
+                      }
+                     */
+
+                  }
+                },
+                success: function(data) {
+                    response($.map(data.users, function(el, index) {
+                        return {
+                            value: el.display_name,
+                            avatar: "http://www.govtrack.us/data/photos/{" +  + "curGovID}.jpeg"
+                        };
+                    }));
+                }
+            });
+        }
+    }).data("uiAutocomplete")._renderItem = function (ul, item) {
+        return $("<li />")
+            .data("item.autocomplete", item)
+            .append("<a><img class = \'search_autocomplete_image\' src='" + item.avatar + "' />" + "<span class = \'search_autocomplete_name\'>" + item.value + "</span></a>")
+            .appendTo(ul);
+    };    
+
+  $( "#top_search" ).autocomplete({ autoFocus: true });
+    
+    $("#top_search").keydown(function(e){
+      if (e.keyCode === 13){
+       if(document.getElementById("ui-id-1").childNodes.length != 0) {
+          window.location = "/?name=" + $("#top_search").val();
+        }
+      }
+    });
+});
+</script>
+
+<style type="text/css">
+  .search_autocomplete_image {
+    width: 55px; height: 55px; padding-right: 10px;
+    padding-top: 8px;
+  }
+  .ui-autocomplete > li { height: 72px; 
+    font: 24px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+  .search_autocomplete_name {
+    position: absolute;
+    padding-top: 15px;
+  }
+  }
+</style>
+
+
+        <script>
+            var map_color = new Object();
+            map_color["Republican"] = [];
+            map_color["Democrat"] = [];
+
+        </script>
+
+       """
         self.write(headContent)
         bros = util.getBuddies(personID, numBuddies)
-        print "Result: "
-        print bros
 
-        self.write("""<div class="container" style="margin-top: 60px; max-width: 270px; height:80px;">""");
+        self.write("""<div class="container" style="margin-top: 40px; max-width: 270px; height:80px;">""");
         self.write("<table class=\"table\">")
         self.write("<tr>")
         self.write("<td style=\"border: none;\">")
@@ -63,13 +181,35 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write("</div>")
         self.write("<span class = \"primary_name\">" + util.getName(personID).encode('ascii', 'xmlcharrefreplace') + "</span>")
         self.write("<span class = \"result_party\">" + util.getParty(personID) + "</span>")
-        self.write("<span class = \"result_state\">" + util.getState(personID) + "</span>")
+        self.write("<span class = \"result_state\">" + state_info[util.getState(personID)]["name"] + "</span>")
         self.write("</td>")
         self.write("</tr>")
         self.write("</table>")
         self.write("</div>");
 
-        self.write("""<div class="container" style="max-width: 1300px;">""");
+        self.write("<script>")
+
+        if str(util.getParty(personID)) == "Republican":
+            if util.getDistrict(personID) != "":
+                if int(util.getDistrict(personID)) < 10:
+                    self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(personID)]["code"]) + "0" + str(util.getDistrict(personID)) + ")")
+                else:
+                    self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+            else:
+                self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+        elif str(util.getParty(personID)) == "Democrat":
+            if util.getDistrict(personID) != "":
+                if int(util.getDistrict(personID)) < 10:
+                    self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(personID)]["code"]) + "0" + str(util.getDistrict(personID)) + ")")
+                else:
+                    self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+            else:
+                self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+        self.write("</script>")
+        self.write("<tr>")
+
+
+        self.write("""<div class="container" style="margin-top: 30px; max-width: 1300px;">""");
         self.write("<table class=\"table\">")
         divide_with = bros[0][1]
         count = 0;
@@ -78,7 +218,28 @@ class MyFormHandler(tornado.web.RequestHandler):
             if count == 1:
                 continue
 
+
+            self.write("<script>")
+
+            if str(util.getParty(friendID[0])) == "Republican":
+                if util.getDistrict(friendID[0]) != "":
+                    if int(util.getDistrict(friendID[0])) < 10:
+                        self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + "0" + str(util.getDistrict(friendID[0])) + ")")
+                    else:
+                        self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+                else:
+                    self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+            elif str(util.getParty(friendID[0])) == "Democrat":
+                if util.getDistrict(friendID[0]) != "":
+                    if int(util.getDistrict(friendID[0])) < 10:
+                        self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + "0" + str(util.getDistrict(friendID[0])) + ")")
+                    else:
+                        self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+                else:
+                    self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+            self.write("</script>")
             self.write("<tr>")
+
             govID = util.getGovID(friendID[0])
             self.write("<td style=\"border: none;\">")
             print "value: "
@@ -91,18 +252,24 @@ class MyFormHandler(tornado.web.RequestHandler):
             hyperlink = "/?personID=" + friendID[0] + "&numBuddies=" + str(numBuddies)
             self.write("\n<a class = \"result_url\" href='" + hyperlink + "'> " + util.getName(friendID[0]).encode('ascii', 'xmlcharrefreplace') + "</a>")
             self.write("<span class = \"result_party\">" + util.getParty(friendID[0]) + "</span>")
-            self.write("<span class = \"result_state\">" + util.getState(friendID[0]) + "</span>")
+            self.write("<span class = \"result_state\">" + state_info[util.getState(friendID[0])]["name"] + "</span>")
             #self.write("<span style = \"margin-left: " + str(int(int(friendID[1])/float(divide_with) * 280)+5)  + "px;\" class = \"result_percent\">" + str(round((int(friendID[1])/float(divide_with) * 100),2)) + "%</span>")
             self.write("</td>")
             self.write("</tr>")
         self.write("</table>")
+
         self.write("""
-            <iframe width = 950 height = 530 style = "overflow = hidden; width=900px; margin-left: 300px;margin-top: -500px;background: none;border:none; height=500px;" src='/static/map.html?id={idVal}'></iframe>""".format(idVal=personID))
+        <div id = "chart"></div>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/queue.v1.min.js"></script>
+        <script src="http://d3js.org/topojson.v1.min.js"></script>
+        <script src="http://d3js.org/topojson.v1.min.js"></script>
+        <script src="/static/js/map.js"></script>""")
+ 
         self.write("</div>");
 
         self.write("</td><td>")
         self.write("</td></tr>")
-        self.write("""<img style="position: absolute;top: 100px;left: 401px;" class = "home_logo" src="static/capitol13.png">""")
         self.write("""</center>
                     </body>
                    </html>
