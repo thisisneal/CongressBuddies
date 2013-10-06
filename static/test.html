@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Bootstrap 101 Template</title>
+    <title>Congress Buddies</title>
 
     <link href="styles.css" rel="stylesheet" type="text/css" />
 
@@ -17,7 +17,7 @@
 
   <div class="container" style = "max-width:400px">
     <img style="" class = "home_logo" src="capitol13.png">
-      <input id="auto" type="text" />
+      <input placeholder = "Search by State or Representative Name" id="auto" type="text" />
   </div>
 
 
@@ -91,6 +91,7 @@ $(document).ready(function () {
         }
       }
     });
+    document.getElementById("auto").focus();
 });
 </script>
 
@@ -115,5 +116,22 @@ $(document).ready(function () {
         </div>
       </div>
       -->
+
+      <div id="footer" style="
+    /* height: 100px; */
+">
+      <div class="container" style="
+    height: 100px;
+">
+        <p style="text-align: center;"><span class="" style="
+    font: 20px &quot;Helvetica-Light&quot;,&quot;Lucida Grande&quot;, Helvetica, Arial, sans-serif;
+    color: rgba(123,134,151,1);
+">Congress Buddies</span></p>
+        <p class="text-muted credit" style="text-align: center;">See who votes like who in congress</p>
+        <p class="text-muted credit" style="text-align: center;">By </p>
+        <p class="text-muted credit" style="text-align: center;">Special Thanks</p>
+      </div>
+    </div>
+
   </body>
 </html>

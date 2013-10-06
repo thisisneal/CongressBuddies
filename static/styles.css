@@ -148,10 +148,10 @@ background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
   background: white;
   border: 1px solid lightgray;
   position: absolute;
-  right: 10px;
+  right: 45px;
   outline: none;
   height: 25px;
-  width: 250px;
+  width: 300px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   top: 15px;
 }
@@ -165,6 +165,7 @@ outline: none;
 height: 25px;
 width: 500px;
 font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+top: 8px;
 }
 
 .result_url {
@@ -261,4 +262,10 @@ td {
 
 rect {
   fill:none;
+}
+
+.search_img {
+  position: absolute;
+  right: 15px;
+  top: 15px;
 }

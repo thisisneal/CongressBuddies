@@ -22,6 +22,7 @@ queue()
     .await(ready);
 
 function ready(error, us, congress) {
+  console.log(map_color);
   svg.append("defs").append("path")
       .attr("id", "land")
       .datum(topojson.feature(us, us.objects.land))
@@ -41,10 +42,10 @@ function ready(error, us, congress) {
     .attr("class",(function(d) { 
        for(var loop = 0; loop < map_color["Republican"].length; loop++) {
         try {
-           if(d.id == map_color["Republican"][loop]) {
+           if(d.id == map_color["Republican"][loop]["code"]) {
            return "repub-districts";
            }
-           else if((JSON.stringify(d.id)).startsWith(map_color["Republican"][loop])) {
+           else if((JSON.stringify(d.id)).startsWith(map_color["Republican"][loop]["code"])) {
            return "repub-districts";
            }
          }
@@ -53,10 +54,10 @@ function ready(error, us, congress) {
        }
        for(var loop = 0; loop < map_color["Democrat"].length; loop++) {
          try {
-           if(d.id == map_color["Democrat"][loop]) {
+           if(d.id == map_color["Democrat"][loop]["code"]) {
            return "dem-districts";
            }
-           else if((JSON.stringify(d.id)).startsWith(map_color["Democrat"][loop])) {
+           else if((JSON.stringify(d.id)).startsWith(map_color["Democrat"][loop]["code"])) {
            return "dem-districts";
            }
          }
@@ -67,7 +68,45 @@ function ready(error, us, congress) {
       }))
     .append("title")
       .text(function(d) { 
-        return d.id; 
+
+       for(var loop = 0; loop < map_color["Republican"].length; loop++) {
+        try {
+           if(d.id == map_color["Republican"][loop]["code"]) {
+             return_str = "";
+             return_str = map_color["Republican"][loop]["name"]
+             return_str += "\nDistrict: " + map_color["Republican"][loop]["district"];
+             return return_str;
+           }
+           else if((JSON.stringify(d.id)).startsWith(map_color["Republican"][loop]["code"])) {
+             return_str = "";
+             return_str = map_color["Republican"][loop]["name"]
+             return return_str;
+           }
+         }
+         catch(err) {
+           return ""
+         }
+       }
+       for(var loop = 0; loop < map_color["Democrat"].length; loop++) {
+         try {
+           if(d.id == map_color["Democrat"][loop]["code"]) {
+             return_str = "";
+             return_str = map_color["Democrat"][loop]["name"]
+             return_str += "\nDistrict: " + map_color["Democrat"][loop]["district"];
+             return return_str;
+           }
+           else if((JSON.stringify(d.id)).startsWith(map_color["Democrat"][loop]["code"])) {
+             return_str = "";
+             return_str = map_color["Democrat"][loop]["name"]
+             return return_str;
+           }
+         }
+         catch(err) {
+           return ""
+         }
+       }
+
+
       });
 
   if(ignore_district) {
@@ -82,4 +121,8 @@ function ready(error, us, congress) {
       .attr("class", "state-boundaries")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
       .attr("d", path);
+
+  (elem=document.getElementById("loading")).parentNode.removeChild(elem);
+  document.getElementById("top_search").focus()
+  document.getElementById("footer").style.opacity = 1;
 }

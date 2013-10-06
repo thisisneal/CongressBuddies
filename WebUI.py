@@ -16,7 +16,7 @@ class MyFormHandler(tornado.web.RequestHandler):
 
     def writeForm(self):
 
-        self.redirect("static/start.html")
+        self.redirect("static/test.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
         #            <input type="submit" >""")
@@ -29,20 +29,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         #            </form></body></html>""")
 
     def renderResults(self, personID, numBuddies):
-
-        #Parse us-state-names.tsv
-        #ex. CA
-            #code: 6
-            #name: California
-
-        state_info ={}
-        with open("static/js/us-state-names.tsv") as f:
-            for line in f:
-                print line.split(None,2)
-                (code,state_id,name) =  line.split(None,2)
-                state_info[state_id]= {}
-                state_info[state_id]["code"] = code
-                state_info[state_id]["name"] = name
+        global state_info
 
         if numBuddies > 10: # cap number of results displayed
             numBuddies = 10
@@ -52,7 +39,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         <!DOCTYPE html>
         <html>
         <head>
-            <title>TITLE</title>
+            <title>Congress Buddies</title>
 
             <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
             <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -68,8 +55,11 @@ class MyFormHandler(tornado.web.RequestHandler):
         <body>
 
         <div id = "top_bar">
-            <img style="" class = "bar_logo" src="static/capitol13.png">
-            <input id="top_search" type="text" />
+            <a href="#" id="bottle" onclick='window.location = "/"';return false;" >
+                <img style="" class = "bar_logo" src="static/capitol13.png">
+            </a>
+            <input placeholder = "Search by State or Representative Name"id="top_search" type="text" />
+            <img style="" class = "search_img" src="static/search.png">
         </div>
 
         <script>
@@ -189,22 +179,34 @@ $(document).ready(function () {
 
         self.write("<script>")
 
+
+        self.write("map_item = {};")
+        self.write("map_item['name'] = \"" + util.getName(personID) + "\";")
+        self.write("map_item['state'] = \"" + util.getState(personID) + "\";")
+        self.write("map_item['district'] = \"" + str(util.getDistrict(personID)) + "\";")
+
         if str(util.getParty(personID)) == "Republican":
             if util.getDistrict(personID) != "":
                 if int(util.getDistrict(personID)) < 10:
-                    self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(personID)]["code"]) + "0" + str(util.getDistrict(personID)) + ")")
+                    self.write("map_item[\"code\"] = " + str(state_info[util.getState(personID)]["code"]) + "0" + str(util.getDistrict(personID)) + ";")
+                    self.write("map_color[\"Republican\"].push(map_item);")
                 else:
-                    self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+                    self.write("map_item[\"code\"] = " + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ";")
+                    self.write("map_color[\"Republican\"].push(map_item);")
             else:
-                self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+                self.write("map_item[\"code\"] = " + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ";")
+                self.write("map_color[\"Republican\"].push(map_item);")
         elif str(util.getParty(personID)) == "Democrat":
             if util.getDistrict(personID) != "":
                 if int(util.getDistrict(personID)) < 10:
-                    self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(personID)]["code"]) + "0" + str(util.getDistrict(personID)) + ")")
+                    self.write("map_item[\"code\"] = " + str(state_info[util.getState(personID)]["code"]) + "0" + str(util.getDistrict(personID)) + ";")
+                    self.write("map_color[\"Democrat\"].push(map_item);")
                 else:
-                    self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+                    self.write("map_item[\"code\"] = " + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ";")
+                    self.write("map_color[\"Democrat\"].push(map_item);")
             else:
-                self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ")")
+                self.write("map_item[\"code\"] = " + str(state_info[util.getState(personID)]["code"]) + str(util.getDistrict(personID)) + ";")
+                self.write("map_color[\"Democrat\"].push(map_item);")
         self.write("</script>")
         self.write("<tr>")
 
@@ -221,22 +223,34 @@ $(document).ready(function () {
 
             self.write("<script>")
 
+            self.write("map_item = {};")
+            self.write("map_item['name'] = \"" + util.getName(friendID[0]) + "\";")
+            self.write("map_item['state'] = \"" + util.getState(friendID[0]) + "\";")
+            self.write("map_item['district'] = \"" + str(util.getDistrict(friendID[0])) + "\";")
+
             if str(util.getParty(friendID[0])) == "Republican":
                 if util.getDistrict(friendID[0]) != "":
                     if int(util.getDistrict(friendID[0])) < 10:
-                        self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + "0" + str(util.getDistrict(friendID[0])) + ")")
+                        self.write("map_item[\"code\"] = " + str(state_info[util.getState(friendID[0])]["code"]) + "0" + str(util.getDistrict(friendID[0])) + ";")
+                        self.write("map_color[\"Republican\"].push(map_item);")
                     else:
-                        self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+                        self.write("map_item[\"code\"] = " + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ";")
+                        self.write("map_color[\"Republican\"].push(map_item);")
                 else:
-                    self.write("map_color[\"Republican\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+                    self.write("map_item[\"code\"] = " + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ";")
+                    self.write("map_color[\"Republican\"].push(map_item);")
             elif str(util.getParty(friendID[0])) == "Democrat":
                 if util.getDistrict(friendID[0]) != "":
                     if int(util.getDistrict(friendID[0])) < 10:
-                        self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + "0" + str(util.getDistrict(friendID[0])) + ")")
+                        self.write("map_item[\"code\"] = " + str(state_info[util.getState(friendID[0])]["code"]) + "0" + str(util.getDistrict(friendID[0])) + ";")
+                        self.write("map_color[\"Democrat\"].push(map_item);")
                     else:
-                        self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+                        self.write("map_item[\"code\"] = " + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ";")
+                        self.write("map_color[\"Democrat\"].push(map_item);")
                 else:
-                    self.write("map_color[\"Democrat\"].push(" + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ")")
+                    self.write("map_item[\"code\"] = " + str(state_info[util.getState(friendID[0])]["code"]) + str(util.getDistrict(friendID[0])) + ";")
+                    self.write("map_color[\"Democrat\"].push(map_item);")
+
             self.write("</script>")
             self.write("<tr>")
 
@@ -259,6 +273,7 @@ $(document).ready(function () {
         self.write("</table>")
 
         self.write("""
+        <p id = "loading" style="margin-left: 600px;top: -300px;position: relative;">Loading Map</p>
         <div id = "chart"></div>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="http://d3js.org/queue.v1.min.js"></script>
@@ -271,6 +286,23 @@ $(document).ready(function () {
         self.write("</td><td>")
         self.write("</td></tr>")
         self.write("""</center>
+        <div id="footer" style="
+    /* height: 100px; */opacity: 0;
+">
+      <div class="container" style="
+    height: 100px;
+">
+        <br>
+        <br>
+        <p style="text-align: center;"><span class="" style="
+    font: 20px &quot;Helvetica-Light&quot;,&quot;Lucida Grande&quot;, Helvetica, Arial, sans-serif;
+    color: rgba(123,134,151,1);
+">Congress Buddies</span></p>
+        <p class="text-muted credit" style="text-align: center;">See who votes like who in congress</p>
+        <p class="text-muted credit" style="text-align: center;">By </p>
+        <p class="text-muted credit" style="text-align: center;">Special Thanks</p>
+      </div>
+    </div>
                     </body>
                    </html>
                    """)
@@ -320,6 +352,7 @@ class VotingRecordHandler(tornado.web.RequestHandler):
 class SearchMemberHandler(tornado.web.RequestHandler):
     def get(self):
         global dataMap
+        global state_info
         query = self.get_argument("query", None)
 
         print "got query: "
@@ -334,7 +367,10 @@ class SearchMemberHandler(tornado.web.RequestHandler):
             if count == 5:
                 break
             if query.lower() in k["name"]["official_full"].lower():
-                print "FOUND FOUND FOUND"
+                return_dict[k["name"]["official_full"]] = dict()
+                return_dict[k["name"]["official_full"]]["id"] = k["id"]["govtrack"]
+                count += 1
+            elif query.lower() in state_info[k['terms'][-1]['state']]['name'].lower():
                 return_dict[k["name"]["official_full"]] = dict()
                 return_dict[k["name"]["official_full"]]["id"] = k["id"]["govtrack"]
                 count += 1
@@ -353,6 +389,20 @@ if __name__ == "__main__":
     f = open('legislators-current.yaml')
     dataMap = yaml.safe_load(f)
     f.close()
+
+    #Parse us-state-names.tsv
+    #ex. CA
+        #code: 6
+        #name: California
+
+    state_info ={}
+    with open("static/js/us-state-names.tsv") as f:
+        for line in f:
+            (code,state_id,name) =  line.split(None,2)
+            state_info[state_id]= {}
+            state_info[state_id]["code"] = code
+            state_info[state_id]["name"] = name
+
     util.init()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
