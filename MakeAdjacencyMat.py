@@ -50,10 +50,16 @@ def parseFile(jsonFile):
     try:
         votes = data['votes']
         #pres = votes['Present']
-        ayes = votes['Yea']
-        countSameVotes(ayes,data['vote_id'])
-        nays = votes['Nay']
+        try:
+            ayes = votes['Yea']
+        except:
+            ayes = votes['Aye']
+        try:
+            nays = votes['Nay']
+        except:
+            nays = votes['No']
         countSameVotes(nays,data['vote_id'])
+        countSameVotes(ayes, data['vote_id'])
         return True
     except Exception, err:
         #print Exception, err
@@ -157,6 +163,7 @@ def init():
         adjacenyMap = json.loads(json_data)
     # Otherwise serialize the mapping after computing it
     else:
+        failCount = 0;
         for dirname, dirnames, filenames in os.walk(pathToVoteDirs):
             for subdirname in dirnames:
                 success = parseFile(pathToVoteDirs + subdirname + "/data.json")
@@ -164,6 +171,8 @@ def init():
                     print ". Parsed file for " + subdirname
                 else:
                     print "X Failed to parse file " + subdirname
+                    failCount += 1
+        print "Failed: ", failCount
         fp = open(MAP_FILE, 'wb')
         json.dump(adjacenyMap, fp)
     BIO_FILE = "BIO_MAP.json" # different serialization for house/senate
