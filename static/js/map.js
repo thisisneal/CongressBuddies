@@ -46,7 +46,10 @@ function ready(error, us, congress) {
            return "repub-districts";
            }
            else if((JSON.stringify(d.id)).startsWith(map_color["Republican"][loop]["code"])) {
-           return "repub-districts";
+             if(JSON.stringify(d.id).length == 3 && map_color["Republican"][loop]["code"].toString().length == 1)
+              return "repub-districts";
+            else if(JSON.stringify(d.id).length == 4 && map_color["Republican"][loop]["code"].toString().length == 2)
+              return "repub-districts";
            }
          }
          catch(err) {
@@ -58,7 +61,10 @@ function ready(error, us, congress) {
            return "dem-districts";
            }
            else if((JSON.stringify(d.id)).startsWith(map_color["Democrat"][loop]["code"])) {
-           return "dem-districts";
+             if(JSON.stringify(d.id).length == 3 && map_color["Democrat"][loop]["code"].toString().length == 1)
+              return "repub-districts";
+            else if(JSON.stringify(d.id).length == 4 && map_color["Democrat"][loop]["code"].toString().length == 2)
+              return "repub-districts";
            }
          }
          catch(err) {
