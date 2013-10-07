@@ -15,7 +15,7 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(name + """: Not Found""")
 
     def writeForm(self):
-        self.redirect("static/test.html")
+        self.redirect("static/start.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
         #            <input type="submit" >""")
@@ -136,8 +136,9 @@ $(document).ready(function () {
 
 <style type="text/css">
   .search_autocomplete_image {
-    width: 55px; height: 55px; padding-right: 10px;
-    padding-top: 8px;
+   padding-right: 10px;
+   max-width: 48px;
+   padding-top: 8px;
   }
   .ui-autocomplete > li {
     height: 72px;
@@ -257,9 +258,9 @@ $(document).ready(function () {
             self.write("<td style=\"border: none;\">")
             #print "value: "
             if int(int(friendID[1])/float(divide_with) * 100) > 89:
-                self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">wide</div>")
+                self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">Loading</div>")
             else:
-                self.write("<div class = \"blue_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">wide</div>")
+                self.write("<div class = \"blue_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">Loading</div>")
             self.write("""<div class = "img_holder"><img width=70 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\"></div>")
 
             hyperlink = "/?personID=" + friendID[0] + "&numBuddies=" + str(numBuddies)
@@ -272,7 +273,7 @@ $(document).ready(function () {
         self.write("</table>")
 
         self.write("""
-        <p id = "loading" style="margin-left: 600px;top: -300px;position: relative;">Loading Map</p>
+        <img src = "static/load.gif" id = "loading" style="margin-left: 600px;top: -300px;position: relative;"></img>
         <div id = "chart"></div>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="http://d3js.org/queue.v1.min.js"></script>

@@ -1,60 +1,138 @@
-<head>
-	<head>
-		<link rel="stylesheet" type="text/css" href="styles.css">
-		<script src="jquery-2.0.3.min.js"></script>
-		<script src="suggest.js"></script>
-    <script type="text/javascript">
-function loadXMLDoc(url)
-{
-  alert('loadxml');
-if (window.XMLHttpRequest)
-{
-xmlhttp = new XMLHttpRequest();
-}
-xmlhttp.open("GET",url,false);
-xmlhttp.send(null);
-alert(xmlhttp.responseText);
-document.getElementById('test').innerHTML=xmlhttp.responseText;
-}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Congress Buddies</title>
+
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui-modified.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+
+  </head>
+  <body>
+
+
+
+  <div class="container" style = "max-width:400px">
+    <img style="" class = "home_logo" src="capitol13.png">
+      <input placeholder = "Search by State or Representative Name" id="auto" type="text" />
+  </div>
+
+
+<script>
+test = ""
+$(document).ready(function () {
+    $("#auto").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://localhost:8888/search",
+                data: {
+                    query: request.term,
+                    pagesize: 10
+                },
+                jsonp: "jsonp",
+                dataType: "jsonp",
+                error: function(jqXHR, textStatus) {
+                  //alert( "Request failed: " + textStatus );
+                },
+                complete: function (xhr, status) {
+                if (status === 'error' || !xhr.responseText) {
+                    //alert("error");
+                  }
+                  else {
+                      var data = JSON.parse(xhr.responseText);
+
+                      var realArray = $.makeArray( data )
+                      response($.map( data, function(val, key) {
+                        // Do something
+                        console.log(val);
+                        console.log(key);
+                        return {
+                            value: key,
+                            avatar: "http://www.govtrack.us/data/photos/" + val["id"] + ".jpeg"
+                        };
+
+                      }));
+
+                      /*
+                      for(var full_name in data){
+                        console.log(full_name);
+                        console.log(data[full_name]["id"]);
+                      }
+                     */
+
+                  }
+                },
+                success: function(data) {
+                    response($.map(data.users, function(el, index) {
+                        return {
+                            value: el.display_name,
+                            avatar: "http://www.govtrack.us/data/photos/{" +  + "curGovID}.jpeg"
+                        };
+                    }));
+                }
+            });
+        }
+    }).data("uiAutocomplete")._renderItem = function (ul, item) {
+        return $("<li />")
+            .data("item.autocomplete", item)
+            .append("<a><img class = \"search_autocomplete_image\" src='" + item.avatar + "' />" + "<span class = \"search_autocomplete_name\">" + item.value + "</span></a>")
+            .appendTo(ul);
+    };
+
+  $( "#auto" ).autocomplete({ autoFocus: true });
+
+    $("#auto").keydown(function(e){
+      if (e.keyCode === 13){
+       if(document.getElementById("ui-id-1").childNodes.length != 0) {
+          window.location = "/?name=" + $("#auto").val();
+        }
+      }
+    });
+    document.getElementById("auto").focus();
+});
 </script>
 
-		<script type="text/javascript">
-			var words;
-			var auto;
-			var getData;
-			function min(x,y){
-				if(x < y)
-					return x;
-				return y;
-			}
-			$(function(){
-				$.get('../personList', function(data){
-					try {
-						getData = data;
-						console.log(getData);
-						auto = new Suggester(getData);
-					} catch(err) {
-						console.log(err);
-					}
-				});
-			});
+<style type="text/css">
+  .search_autocomplete_image {
+    max-width: 48px;
+    padding-right: 10px;
+    padding-top: 8px;
+  }
+  .ui-autocomplete > li {
+    height: 72px;
+    font: 24px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+  .search_autocomplete_name {
+    position: absolute;
+    padding-top: 15px;
+  }
+</style>
+      <!--
+      <input class = "home_search" type = "text" placeholder = "search">
+      <div class="demo">
+          <span class="twitter-typeahead" style="position: relative; display: inline-block;"><input class="tt-hint" type="text" autocomplete="off" spellcheck="off" disabled="" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; background-attachment: scroll; background-clip: border-box; background-color: rgb(255, 255, 255); background-image: none; background-origin: padding-box; background-size: auto; background-position: 0% 0%; background-repeat: repeat repeat;"><input class="typeahead tt-query" type="text" placeholder="countries" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;"><span style="position: absolute; left: -9999px; visibility: hidden; white-space: nowrap; font-family: 'Lucida Grande'; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 400; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></span><span class="tt-dropdown-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;"></span></span>
+        </div>
+      </div>
+      -->
 
-			$(document).on('input', '#suggest', function() {
-				var matches = auto.suggest($("#suggest").val());
-				$('#matches').html("");
-				for(var i = 0; i < min(matches.length, 4); i++)
-					$('#matches').append( "<a href=\"/?name=" + matches[i].replace(" ", "+") + "\">" + matches[i] + "</a><br>");
-			});
-		</script>
-	</head>
-	<body>
-	<form action="/" method="get">
-        <input type='text' id="suggest" name='name' placeholder="Search..."
-        		class="searchTB" autocomplete="off">
-        <input type="submit" value="Submit">
-	    <div id="matches"></div>
-	</form>
-    <button type="button" onclick="loadXMLDoc('/ajax')">Click Me</button>
-        <img src="capitol.png" alt="Smiley face" >
-    </body>
+      <div id="footer" style="
+    /* height: 100px; */
+">
+      <div class="container" style="
+    height: 100px;
+">
+        <p style="text-align: center;"><span class="" style="
+    font: 20px &quot;Helvetica-Light&quot;,&quot;Lucida Grande&quot;, Helvetica, Arial, sans-serif;
+    color: rgba(123,134,151,1);
+">Congress Buddies</span></p>
+        <p class="text-muted credit" style="text-align: center;">See who votes like who in congress</p>
+        <p class="text-muted credit" style="text-align: center;">by </p>
+        <p class="text-muted credit" style="text-align: center;">Anil Ganti, Saurabh Davala, Neal Bhasin, Vijay Thurimella</p>
+      </div>
+    </div>
+
+  </body>
 </html>

@@ -84,9 +84,13 @@ function ready(error, us, congress) {
              return return_str;
            }
            else if((JSON.stringify(d.id)).startsWith(map_color["Republican"][loop]["code"])) {
-             return_str = "";
-             return_str = map_color["Republican"][loop]["name"]
-             return return_str;
+
+            return_str = "";
+            if(JSON.stringify(d.id).length == 3 && map_color["Republican"][loop]["code"].toString().length == 1)
+              return_str = map_color["Republican"][loop]["name"]
+            else if(JSON.stringify(d.id).length == 4 && map_color["Republican"][loop]["code"].toString().length == 2)
+              return_str = map_color["Republican"][loop]["name"]
+            return return_str;
            }
          }
          catch(err) {
@@ -103,7 +107,10 @@ function ready(error, us, congress) {
            }
            else if((JSON.stringify(d.id)).startsWith(map_color["Democrat"][loop]["code"])) {
              return_str = "";
-             return_str = map_color["Democrat"][loop]["name"]
+            if(JSON.stringify(d.id).length == 3 && map_color["Democrat"][loop]["code"].toString().length == 1)
+              return_str = map_color["Democrat"][loop]["name"]
+            else if(JSON.stringify(d.id).length == 4 && map_color["Democrat"][loop]["code"].toString().length == 2)
+              return_str = map_color["Democrat"][loop]["name"]
              return return_str;
            }
          }
