@@ -15,7 +15,6 @@ class MyFormHandler(tornado.web.RequestHandler):
         self.write(name + """: Not Found""")
 
     def writeForm(self):
-
         self.redirect("static/test.html")
         # self.write("""Name search: <form action="/" method="get">
         #            <input type="text" name="name">
@@ -119,12 +118,12 @@ $(document).ready(function () {
     }).data("uiAutocomplete")._renderItem = function (ul, item) {
         return $("<li />")
             .data("item.autocomplete", item)
-            .append("<a><img class = \'search_autocomplete_image\' src='" + item.avatar + "' />" + "<span class = \'search_autocomplete_name\'>" + item.value + "</span></a>")
+            .append("<a><img class = 'search_autocomplete_image' src='" + item.avatar + "' />" + "<span class = \'search_autocomplete_name\'>" + item.value + "</span></a>")
             .appendTo(ul);
-    };    
+    };
 
   $( "#top_search" ).autocomplete({ autoFocus: true });
-    
+
     $("#top_search").keydown(function(e){
       if (e.keyCode === 13){
        if(document.getElementById("ui-id-1").childNodes.length != 0) {
@@ -140,13 +139,13 @@ $(document).ready(function () {
     width: 55px; height: 55px; padding-right: 10px;
     padding-top: 8px;
   }
-  .ui-autocomplete > li { height: 72px; 
+  .ui-autocomplete > li {
+    height: 72px;
     font: 24px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
   }
   .search_autocomplete_name {
     position: absolute;
     padding-top: 15px;
-  }
   }
 </style>
 
@@ -256,7 +255,7 @@ $(document).ready(function () {
 
             govID = util.getGovID(friendID[0])
             self.write("<td style=\"border: none;\">")
-            print "value: "
+            #print "value: "
             if int(int(friendID[1])/float(divide_with) * 100) > 89:
                 self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">wide</div>")
             else:
@@ -280,7 +279,7 @@ $(document).ready(function () {
         <script src="http://d3js.org/topojson.v1.min.js"></script>
         <script src="http://d3js.org/topojson.v1.min.js"></script>
         <script src="/static/js/map.js"></script>""")
- 
+
         self.write("</div>");
 
         self.write("</td><td>")
@@ -299,8 +298,8 @@ $(document).ready(function () {
     color: rgba(123,134,151,1);
 ">Congress Buddies</span></p>
         <p class="text-muted credit" style="text-align: center;">See who votes like who in congress</p>
-        <p class="text-muted credit" style="text-align: center;">By </p>
-        <p class="text-muted credit" style="text-align: center;">Special Thanks</p>
+        <p class="text-muted credit" style="text-align: center;">by </p>
+        <p class="text-muted credit" style="text-align: center;">Anil Ganti, Saurabh Davala, Neal Bhasin, Vijay Thurimella</p>
       </div>
     </div>
                     </body>

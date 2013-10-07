@@ -80,10 +80,10 @@ $(document).ready(function () {
             .data("item.autocomplete", item)
             .append("<a><img class = \"search_autocomplete_image\" src='" + item.avatar + "' />" + "<span class = \"search_autocomplete_name\">" + item.value + "</span></a>")
             .appendTo(ul);
-    };    
+    };
 
   $( "#auto" ).autocomplete({ autoFocus: true });
-    
+
     $("#auto").keydown(function(e){
       if (e.keyCode === 13){
        if(document.getElementById("ui-id-1").childNodes.length != 0) {
@@ -100,7 +100,7 @@ $(document).ready(function () {
     width: 55px; height: 55px; padding-right: 10px;
     padding-top: 8px;
   }
-  .ui-autocomplete > li { height: 72px; 
+  .ui-autocomplete > li { height: 72px;
     font: 24px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
   }
   .search_autocomplete_name {
@@ -128,8 +128,8 @@ $(document).ready(function () {
     color: rgba(123,134,151,1);
 ">Congress Buddies</span></p>
         <p class="text-muted credit" style="text-align: center;">See who votes like who in congress</p>
-        <p class="text-muted credit" style="text-align: center;">By </p>
-        <p class="text-muted credit" style="text-align: center;">Special Thanks</p>
+        <p class="text-muted credit" style="text-align: center;">by </p>
+        <p class="text-muted credit" style="text-align: center;">Anil Ganti, Saurabh Davala, Neal Bhasin, Vijay Thurimella</p>
       </div>
     </div>
 
