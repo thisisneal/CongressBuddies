@@ -62,9 +62,9 @@ function ready(error, us, congress) {
            }
            else if((JSON.stringify(d.id)).startsWith(map_color["Democrat"][loop]["code"])) {
              if(JSON.stringify(d.id).length == 3 && map_color["Democrat"][loop]["code"].toString().length == 1)
-              return "repub-districts";
+              return "dem-districts";
             else if(JSON.stringify(d.id).length == 4 && map_color["Democrat"][loop]["code"].toString().length == 2)
-              return "repub-districts";
+              return "dem-districts";
            }
          }
          catch(err) {

@@ -67,7 +67,7 @@ $(document).ready(function () {
     $("#top_search").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://localhost:8888/search",
+                url: "http://198.199.113.75/search",
                 data: {
                     query: request.term,
                     pagesize: 10
@@ -299,8 +299,10 @@ $(document).ready(function () {
     color: rgba(123,134,151,1);
 ">Congress Buddies</span></p>
         <p class="text-muted credit" style="text-align: center;">See who votes like who in congress</p>
-        <p class="text-muted credit" style="text-align: center;">by </p>
         <p class="text-muted credit" style="text-align: center;">Anil Ganti, Saurabh Davala, Neal Bhasin, Vijay Thurimella</p>
+      	<p class="text-muted credit" style="text-align: center;">Voting Records from <a href="http://www.govtrack.us/">GovTrack.us</a>
+        Map from <a href="http://bl.ocks.org/mbostock">mbostock</a> View Code <a href="https://github.com/thisisneal/CongressBuddies">GitHub</a></p>
+
       </div>
     </div>
                     </body>
@@ -404,6 +406,6 @@ if __name__ == "__main__":
             state_info[state_id]["name"] = name
 
     util.init()
-    application.listen(8888)
+    application.listen(8080)
     tornado.ioloop.IOLoop.instance().start()
 
