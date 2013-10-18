@@ -67,7 +67,7 @@ $(document).ready(function () {
     $("#top_search").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://198.199.113.75/search",
+                url: "http://www.congressbuddies.com/search",
                 data: {
                     query: request.term,
                     pagesize: 10
@@ -213,7 +213,7 @@ $(document).ready(function () {
 
         self.write("""<div class="container" style="margin-top: 30px; max-width: 1300px;">""");
         self.write("<table class=\"table\">")
-        divide_with = bros[0][1]
+
         count = 0;
         for friendID in bros:
             count+=1
@@ -256,18 +256,12 @@ $(document).ready(function () {
 
             govID = util.getGovID(friendID[0])
             self.write("<td style=\"border: none;\">")
-            #print "value: "
-            if int(int(friendID[1])/float(divide_with) * 100) > 89:
-                self.write("<div class = \"green_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">Loading</div>")
-            else:
-                self.write("<div class = \"blue_bar\" style=\"width:" + str(int(int(friendID[1])/float(divide_with) * 280)) + "px;\">Loading</div>")
+	    self.write("<div class = \"blue_bar\" style=\"width 280px;\">Loading</div>")
             self.write("""<div class = "img_holder"><img width=70 src="http://www.govtrack.us/data/photos/""" + str(govID) + ".jpeg\"></div>")
-
             hyperlink = "/?personID=" + friendID[0] + "&numBuddies=" + str(numBuddies)
             self.write("\n<a class = \"result_url\" href='" + hyperlink + "'> " + util.getName(friendID[0]).encode('ascii', 'xmlcharrefreplace') + "</a>")
             self.write("<span class = \"result_party\">" + util.getParty(friendID[0]) + "</span>")
             self.write("<span class = \"result_state\">" + state_info[util.getState(friendID[0])]["name"] + "</span>")
-            #self.write("<span style = \"margin-left: " + str(int(int(friendID[1])/float(divide_with) * 280)+5)  + "px;\" class = \"result_percent\">" + str(round((int(friendID[1])/float(divide_with) * 100),2)) + "%</span>")
             self.write("</td>")
             self.write("</tr>")
         self.write("</table>")
