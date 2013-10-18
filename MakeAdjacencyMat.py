@@ -206,7 +206,7 @@ def init():
     json.dump(bioMap, fp)
     print "Done initializing backend."
     # Ad hoc:
-    makeCSV()
+    #makeCSV()
 
     #buddies = getBuddies("P000523", 5)
     #for bro in buddies:
