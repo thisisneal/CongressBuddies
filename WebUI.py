@@ -385,6 +385,7 @@ application = tornado.web.Application([
 ], static_path = "static/")
 
 if __name__ == "__main__":
+    print "Loading yaml"
     f = open('legislators-current.yaml')
     dataMap = yaml.safe_load(f)
     f.close()
@@ -397,7 +398,7 @@ if __name__ == "__main__":
     state_info ={}
     with open("static/js/us-state-names.tsv") as f:
         for line in f:
-            (code,state_id,name) =  line.split(None,2)
+            (code,state_id,name) = line.split(None,2)
             state_info[state_id]= {}
             state_info[state_id]["code"] = code
             state_info[state_id]["name"] = name

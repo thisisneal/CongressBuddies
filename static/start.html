@@ -27,7 +27,7 @@ $(document).ready(function () {
     $("#auto").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://198.199.113.75/search",
+                url: "http://localhost:8080/search",
                 data: {
                     query: request.term,
                     pagesize: 10
@@ -53,7 +53,6 @@ $(document).ready(function () {
                             value: key,
                             avatar: "http://www.govtrack.us/data/photos/" + val["id"] + ".jpeg"
                         };
-
                       }));
 
                       /*

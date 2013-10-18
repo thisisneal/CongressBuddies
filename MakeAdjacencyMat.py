@@ -1,7 +1,7 @@
 import os
 import json
 import yaml
-import sys
+#import sys
 
 import difflib
 
@@ -61,7 +61,7 @@ def parseFile(jsonFile):
         countSameVotes(nays,data['vote_id'])
         countSameVotes(ayes, data['vote_id'])
         return True
-    except Exception, err:
+    except Exception:
         #print Exception, err
         return False
 
@@ -116,7 +116,7 @@ def getBuddies(personID, num):
 # Populate bioMap
 def getBios():
     global bioMap, nameMap
-    BIO_FILE = "BIO_MAP.json" # different serialization for house/senate
+    BIO_FILE = "BIO_MAP.json" # should use different serialization for house/senate
     # Pull congress bios from disk if possible
     if os.path.isfile(BIO_FILE):
         json_data = open(BIO_FILE).read()
@@ -147,10 +147,40 @@ def getBios():
                 pass
     nameMap = {(v[1].lower()):k for k, v in bioMap.items()}
 
+# Make a CSV out of the adjacenyMap for external analysis
+def makeCSV():
+    curIndex = 0
+    indexMap = {} # Each person will map to a index (matrix row/col)
+    for person, neighborData in adjacenyMap.items():
+        indexMap[person] = curIndex
+        curIndex += 1
+    # Initialize a complete 2D array
+    N = len(adjacenyMap.items())
+    adjMat = []
+    for i in range(0, N):
+        x = []
+        for j in range(0, N):
+            x.append(0)
+        adjMat.append(x)
+    # Build adjaceny matrix out of adjacency ditionary
+    rowIndex = colIndex = 0
+    for perA, neighborData in adjacenyMap.items():
+        rowIndex = indexMap[perA]
+        for perB, score in neighborData.items():
+            colIndex = indexMap[perB]
+            adjMat[rowIndex][colIndex] = score
+    # Write to file as csv
+    fp = open("ADJ_MAT.csv", 'wb')
+    for i in range(0, N):
+        for j in range(0, N):
+            fp.write(str(adjMat[i][j]))
+            fp.write(',')
+    print "Wrote adjacency matrix of size " + str(N) + " to file"
+
 # Prepare lookup maps
 def init():
     global adjacenyMap
-    print "initializing backend..."
+    print "Initializing backend..."
     getBios()
     MAP_FILE = "ADJ_MAP.json"
     # Pull adjacency mapping from disk if possible
@@ -176,6 +206,8 @@ def init():
     json.dump(bioMap, fp)
     print "Done initializing backend."
     # Ad hoc:
+    makeCSV()
+
     #buddies = getBuddies("P000523", 5)
     #for bro in buddies:
     #    print bro[0] + " : " + bioMap[bro[0]][1]
