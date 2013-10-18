@@ -67,7 +67,7 @@ $(document).ready(function () {
     $("#top_search").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://www.congressbuddies.com/search",
+                url: "http://localhost:8080/search",
                 data: {
                     query: request.term,
                     pagesize: 10
@@ -299,9 +299,12 @@ $(document).ready(function () {
 
       </div>
     </div>
-                    </body>
-                   </html>
+</body>
+</html>
                    """)
+
+    def decode_argument(self, value, name):
+        return value.decode('latin-1')
 
     def get(self):
         name = self.get_argument("name", None)
@@ -309,7 +312,7 @@ $(document).ready(function () {
             personID = util.getIDfromName(name)
             if personID == None:
                 self.write(name + """: Not Found""")
-                NotFound(self, name)
+                #NotFound(self, name)
                 return
             #TODO: Maybe change 5 to add feature
             self.renderResults(personID, 5)
@@ -351,7 +354,7 @@ class SearchMemberHandler(tornado.web.RequestHandler):
         global state_info
         query = self.get_argument("query", None)
 
-        print "got query: "
+        print "\ngot query: "
         print query
 
         if len(query) < 3:
