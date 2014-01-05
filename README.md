@@ -5,7 +5,7 @@ Description
 -----------
 See who likes who in congress!
 
-Search for any US Representative or Senator, and CongressBuddies will display the 5 "most similar" congress members based on voting record as well as their respective states.
+Search for any US Representative or Senator, and CongressBuddies will display the names and states of the 5 "most similar" congress members based on their voting records.
 
 Downloading Vote Data
 ---------------------
