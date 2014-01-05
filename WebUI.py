@@ -155,7 +155,6 @@ $(document).ready(function () {
             var map_color = new Object();
             map_color["Republican"] = [];
             map_color["Democrat"] = [];
-
         </script>
 
        """
@@ -172,6 +171,7 @@ $(document).ready(function () {
         self.write("<span class = \"primary_name\">" + util.getName(personID).encode('ascii', 'xmlcharrefreplace') + "</span>")
         self.write("<span class = \"result_party\">" + util.getParty(personID) + "</span>")
         self.write("<span class = \"result_state\">" + state_info[util.getState(personID)]["name"] + "</span>")
+        self.write("<!--" + util.getUrl(personID) + "-->")
         self.write("</td>")
         self.write("</tr>")
         self.write("</table>")
@@ -179,11 +179,11 @@ $(document).ready(function () {
 
         self.write("<script>")
 
-
         self.write("map_item = {};")
         self.write("map_item['name'] = \"" + util.getName(personID) + "\";")
         self.write("map_item['state'] = \"" + util.getState(personID) + "\";")
         self.write("map_item['district'] = \"" + str(util.getDistrict(personID)) + "\";")
+        self.write("map_item['url'] = \"" + util.getUrl(personID) + "\";")
 
         if str(util.getParty(personID)) == "Republican":
             if util.getDistrict(personID) != "":
@@ -385,10 +385,11 @@ application = tornado.web.Application([
 ], static_path = "static/")
 
 if __name__ == "__main__":
-    print "Loading yaml"
+    print "Loading yaml..."
     f = open('legislators-current.yaml')
     dataMap = yaml.safe_load(f)
     f.close()
+    print "Done loading yaml."
 
     #Parse us-state-names.tsv
     #ex. CA

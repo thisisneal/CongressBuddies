@@ -78,9 +78,12 @@ def getState(personID):
 
 def getParty(personID):
     return bioMap[personID][3]
+    
+def getUrl(personID):
+    return bioMap[personID][4]
 
 def getDistrict(personID):
-    return bioMap[personID][4]
+    return bioMap[personID][5]
 
 # Get a list of names of all congress people as a string
 def getPersonListStr():
@@ -137,11 +140,12 @@ def getBios():
                 else:
                     district = ""
 
-                bioMap[keyID] =(person['id']['govtrack'],
-                                person['name']['official_full'],
-                                person['terms'][-1]['state'],
-                                person['terms'][-1]['party'],
-                                district
+                bioMap[keyID] = (person['id']['govtrack'],
+                                 person['name']['official_full'],
+                                 person['terms'][-1]['state'],
+                                 person['terms'][-1]['party'],
+                                 person['terms'][-1]['url'],
+                                 district
                                 )
             except:
                 pass
@@ -211,3 +215,5 @@ def init():
     #buddies = getBuddies("P000523", 5)
     #for bro in buddies:
     #    print bro[0] + " : " + bioMap[bro[0]][1]
+    
+init()
