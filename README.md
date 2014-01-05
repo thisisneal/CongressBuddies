@@ -10,12 +10,15 @@ Search for any US Representative or Senator, and CongressBuddies will display th
 Downloading Vote Data
 ---------------------
 Command to download 2013 vote records from govtrack:
+    
     rsync -avz --delete --delete-excluded --exclude *.xml govtrack.us::govtrackdata/congress/113/votes .
 
 Dependencies
 ------------
 PyYAML
+
 Tornado
+
     ./install.sh 
 
 How to Run
