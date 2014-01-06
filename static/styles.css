@@ -179,14 +179,14 @@ top: 8px;
   font: 16px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
   margin-left: 73px;
   position: absolute;
-  margin-top: -52px;
+  margin-top: -55px;
 }
 
 .result_state {
   font: 16px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
   margin-left: 73px;
   position: absolute;
-  margin-top: -34px;
+  margin-top: -37px;
 }
 
 .result_percent {
@@ -197,7 +197,7 @@ top: 8px;
 
 .primary_name {
   font: 20px "Helvetica-Light","Lucida Grande", Helvetica, Arial, sans-serif;
-  margin-top: -73px;
+  margin-top: -77px;
   position: absolute;
   margin-left: 73px;
 }

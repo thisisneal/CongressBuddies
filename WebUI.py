@@ -171,7 +171,7 @@ $(document).ready(function () {
         self.write("<span class = \"primary_name\">" + util.getName(personID).encode('ascii', 'xmlcharrefreplace') + "</span>")
         self.write("<span class = \"result_party\">" + util.getParty(personID) + "</span>")
         self.write("<span class = \"result_state\">" + state_info[util.getState(personID)]["name"] + "</span>")
-        self.write("<!--" + util.getUrl(personID) + "-->")
+        self.write("<a href=\""+ util.getUrl(personID) + "\"style=\"font: 14px &quot;Helvetica-Light&quot;,&quot;Lucida Grande&quot;, Helvetica, Arial, sans-serif; margin-left: 73px; position: absolute; margin-top: -18px;\">Website</a>")
         self.write("</td>")
         self.write("</tr>")
         self.write("</table>")
